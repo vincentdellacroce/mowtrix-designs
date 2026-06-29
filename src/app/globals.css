@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MOWTRIX DESIGNS — Design System
+   "Apple met the Matrix" — emerald-purist, glass, forest dark
+   ============================================================ */
+
+@theme {
+  /* Core surfaces */
+  --color-void: #050807;
+  --color-black-matte: #0a0f0d;
+  --color-forest-deep: #0d2f1f;
+  --color-forest: #103d29;
+  --color-forest-soft: #14492f;
+
+  /* Emerald system (the only accent) */
+  --color-emerald-50: #e9fff5;
+  --color-emerald-200: #9ff5cd;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-glow: #2bff9e;
+
+  /* Text */
+  --color-mist: #eafff6;
+  --color-fog: #9fb8ac;
+  --color-haze: #6b8278;
+
+  /* Fonts (wired via next/font CSS variables) */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Motion */
+  --ease-holo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-emerge: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Base ---------- */
+* {
+  border-color: color-mix(in oklab, var(--color-emerald-500) 14%, transparent);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-mist);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  /* layered ambient: forest vignette + faint emerald aurora */
+  background-image:
+    radial-gradient(1200px 700px at 50% -10%, color-mix(in oklab, var(--color-forest-deep) 70%, transparent), transparent 60%),
+    radial-gradient(900px 500px at 85% 10%, color-mix(in oklab, var(--color-emerald-600) 12%, transparent), transparent 55%),
+    radial-gradient(700px 500px at 10% 90%, color-mix(in oklab, var(--color-forest) 35%, transparent), transparent 60%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-emerald-400) 35%, transparent);
+  color: var(--color-mist);
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--color-emerald-500) 35%, transparent);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--color-emerald-400) 55%, transparent);
+}
+
+/* ---------- Typography helpers ---------- */
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }
+
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+}
+
+/* gradient emerald text */
+.text-glow-emerald {
+  background: linear-gradient(180deg, var(--color-mist), var(--color-emerald-200) 60%, var(--color-emerald-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Glass ---------- */
+.glass {
+  background: color-mix(in oklab, var(--color-black-matte) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--color-emerald-300) 12%, transparent);
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, var(--color-emerald-200) 8%, transparent),
+    0 20px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+.glass-strong {
+  background: color-mix(in oklab, var(--color-black-matte) 78%, transparent);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid color-mix(in oklab, var(--color-emerald-300) 16%, transparent);
+}
+
+/* ---------- Emerald glow ---------- */
+.glow-sm { box-shadow: 0 0 20px -4px color-mix(in oklab, var(--color-emerald-glow) 45%, transparent); }
+.glow-md {
+  box-shadow:
+    0 0 30px -6px color-mix(in oklab, var(--color-emerald-glow) 55%, transparent),
+    0 0 80px -30px color-mix(in oklab, var(--color-emerald-500) 60%, transparent);
+}
+.text-shadow-glow { text-shadow: 0 0 24px color-mix(in oklab, var(--color-emerald-glow) 45%, transparent); }
+
+/* ---------- The Matrix grid (ambient signature) ---------- */
+.grid-lines {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-emerald-400) 100%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-emerald-400) 100%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.grid-mask-radial {
+  -webkit-mask-image: radial-gradient(circle at center, black, transparent 72%);
+  mask-image: radial-gradient(circle at center, black, transparent 72%);
+}
+
+/* perspective floor grid */
+.grid-floor {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-emerald-400) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-emerald-400) 22%, transparent) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(420px) rotateX(62deg);
+  transform-origin: center bottom;
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes grid-drift {
+  from { background-position: 0 0; }
+  to { background-position: 60px 60px; }
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+@keyframes scanline {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(1100%); }
+}
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes rise-fade {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-grid-drift { animation: grid-drift 8s linear infinite; }
+.animate-glow-breathe { animation: glow-breathe 4s ease-in-out infinite; }
+.animate-float { animation: float-y 6s ease-in-out infinite; }
+.animate-marquee { animation: marquee-x 40s linear infinite; }
+.animate-spin-slow { animation: spin-slow 22s linear infinite; }
+
+.shimmer {
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    color-mix(in oklab, var(--color-emerald-200) 35%, transparent) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.4s ease-in-out infinite;
+}
+
+/* dotted noise to kill banding on dark gradients */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* magnetic / interactive cursor target hint */
+.cursor-target { cursor: none; }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-marquee { animation: none !important; }
+}
+
+/* utility: hide native cursor only on fine pointers when custom cursor active */
+@media (hover: hover) and (pointer: fine) {
+  body.has-custom-cursor { cursor: none; }
+  body.has-custom-cursor a,
+  body.has-custom-cursor button { cursor: none; }
+}
