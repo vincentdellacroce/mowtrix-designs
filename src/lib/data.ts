@@ -205,38 +205,38 @@ export interface Service {
 export const SERVICES: Service[] = [
   {
     id: "seo",
-    title: "SEO — Search Engine Optimization",
+    title: "SEO — Get found on Google",
     blurb:
-      "Own the searches your customers already type. Technical foundations, local dominance, and content that compounds.",
+      "When someone in your area searches “landscaper near me,” you show up first — not your competitor. First spot gets the call. That call is a paying job.",
     points: [
-      "Local pack & 'near me' domination",
-      "Per-suburb service-area pages",
-      "Core Web Vitals & technical SEO",
-      "Authority content engine",
+      "Show up first when locals search for what you do",
+      "A page for every suburb you serve — so you win every area",
+      "A faster site that Google ranks above the competition",
+      "Every month you rank #1 is another month of free leads",
     ],
   },
   {
     id: "aeo",
-    title: "AEO — Answer Engine Optimization",
+    title: "AEO — Be the answer at the top",
     blurb:
-      "Be the answer, not a link. Structured data and entity modeling so you win featured snippets and voice results.",
+      "When people ask Google a question, one business gets the big answer box at the top. We make that your business — customers see you first and call you before anyone else.",
     points: [
-      "Schema & rich-result markup",
-      "Featured-snippet targeting",
-      "FAQ & entity optimization",
-      "Voice-search readiness",
+      "Your business in the answer box above every other result",
+      "Get picked when customers ask Siri or Google by voice",
+      "Answer the exact questions your customers are asking",
+      "More calls without paying a cent for ads",
     ],
   },
   {
     id: "geo",
-    title: "GEO — Generative Engine Optimization",
+    title: "GEO — Get recommended by AI",
     blurb:
-      "Get recommended by ChatGPT, Gemini & Perplexity. We make your business the source AI cites first.",
+      "People now ask ChatGPT “who’s the best roofer near me?” — and hire whoever it names. We make sure it names you. That’s clients your competitors never even see coming.",
     points: [
-      "AI-citation engineering",
-      "LLM-readable content structure",
-      "Brand entity authority",
-      "Generative-answer monitoring",
+      "ChatGPT, Gemini & Perplexity recommend you by name",
+      "Be the one business AI trusts and mentions first",
+      "Win the customers who skip Google entirely",
+      "We track what AI says about you — and keep you on top",
     ],
   },
 ];

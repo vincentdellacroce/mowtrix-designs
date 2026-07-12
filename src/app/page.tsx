@@ -45,11 +45,11 @@ export default function Home() {
             eyebrow="What we do"
             title={
               <>
-                Three ways we make you{" "}
-                <span className="text-glow-emerald">unmissable</span>.
+                Three ways we get you{" "}
+                <span className="text-glow-emerald">more clients</span>.
               </>
             }
-            intro="Ranking on Google is table stakes. We also make you the answer assistants quote and the business AI recommends by name."
+            intro="Your customers find businesses three ways: they search Google, they ask a question, or they ask AI. We make sure the answer is you — every time. More ways to be found means more calls, and more calls means more jobs."
           />
         </Reveal>
         <SeoAeoGeo />
