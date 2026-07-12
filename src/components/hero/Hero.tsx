@@ -18,24 +18,26 @@ import { cn } from "@/lib/utils";
 import { RankChart, StatTiles } from "./scenes";
 import { SampleCard, SampleFormOverlay } from "./SampleForm";
 
-// Chapter 0 uses WebGL MeshGradient; chapters 1 & 2 use cheap CSS gradients
+// All chapters render a WebGL MeshGradient, perf-capped: small canvas
+// (maxPixelCount), 1x pixel ratio, and speed=0 on inactive chapters so
+// only one shader animates at a time.
 const CHAPTERS = [
   {
     phrase: "MOWTRIX DESIGNS",
     until: 0.3,
-    bg: null, // handled by MeshGradient below
+    colors: ["#cfe3c0", "#ddebd4", "#f4f6ef", "#b8d9a8"],
     dark: false,
   },
   {
     phrase: "One Form, One Week, One Call",
     until: 0.66,
-    bg: "linear-gradient(155deg, #020d07 0%, #091f12 45%, #0c2318 80%, #061209 100%)",
+    colors: ["#020d07", "#0c2318", "#123524", "#061209"],
     dark: true,
   },
   {
     phrase: "Rank Higher, Grow Quicker",
     until: 1.01,
-    bg: "radial-gradient(ellipse 100% 85% at 30% 55%, #3de028 0%, #12850e 40%, #0a3a1c 75%, #041509 100%)",
+    colors: ["#3de028", "#12850e", "#0a3a1c", "#041509"],
     dark: true,
   },
 ];
@@ -85,7 +87,7 @@ export default function Hero() {
               <GlowButton variant="solid" href="/work">View the work</GlowButton>
             </div>
           </div>
-          <div style={{ background: CHAPTERS[1].bg }} className="px-6 py-24">
+          <div style={{ background: "linear-gradient(155deg, #020d07 0%, #091f12 45%, #0c2318 80%, #061209 100%)" }} className="px-6 py-24">
             <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-2">
               <div>
                 <h2 className="font-display text-3xl font-semibold text-mist">{ONE_FORM.title}</h2>
@@ -98,7 +100,7 @@ export default function Hero() {
               <SampleCard onOpen={() => setFormOpen(true)} />
             </div>
           </div>
-          <div style={{ background: CHAPTERS[2].bg }} className="px-6 py-24">
+          <div style={{ background: "radial-gradient(ellipse 100% 85% at 30% 55%, #3de028 0%, #12850e 40%, #0a3a1c 75%, #041509 100%)" }} className="px-6 py-24">
             <div className="mx-auto max-w-5xl">
               <h2 className="font-display text-3xl font-semibold text-mist">Rank Higher, Grow Quicker</h2>
               <div className="mt-8 grid items-center gap-8 md:grid-cols-2">
@@ -118,32 +120,25 @@ export default function Hero() {
       <section ref={ref} className="relative h-[400vh]">
         {/* pinned stage */}
         <div className="sticky top-0 h-screen overflow-hidden">
-          {/* Background layers — MeshGradient for ch0, CSS for ch1/2 */}
+          {/* Background layers — one MeshGradient per chapter, cross-fading.
+              Capped canvas (~250k px, 1x ratio) keeps GPU work minimal;
+              speed=0 halts the rAF on inactive chapters so only one animates. */}
           <div className="absolute inset-0">
-            {/* Chapter 0: WebGL mesh gradient, capped to ~500×500 canvas so GPU work is minimal.
-                speed=0 stops the rAF entirely when not active (zero perf cost). */}
-            <motion.div
-              className="absolute inset-0"
-              animate={{ opacity: chapter === 0 ? 1 : 0 }}
-              transition={{ duration: 1.1, ease: "easeInOut" }}
-            >
-              <MeshGradient
-                className="absolute inset-0 h-full w-full"
-                colors={["#cfe3c0", "#ddebd4", "#f4f6ef", "#b8d9a8"]}
-                speed={chapter === 0 ? 0.35 : 0}
-                maxPixelCount={250000}
-                minPixelRatio={1}
-              />
-            </motion.div>
-            {/* Chapters 1 & 2: pure CSS, no GPU shader */}
-            {CHAPTERS.slice(1).map((ch, i) => (
+            {CHAPTERS.map((ch, i) => (
               <motion.div
-                key={i + 1}
+                key={i}
                 className="absolute inset-0"
-                style={{ background: ch.bg ?? undefined }}
-                animate={{ opacity: chapter === i + 1 ? 1 : 0 }}
+                animate={{ opacity: chapter === i ? 1 : 0 }}
                 transition={{ duration: 1.1, ease: "easeInOut" }}
-              />
+              >
+                <MeshGradient
+                  className="absolute inset-0 h-full w-full"
+                  colors={[...ch.colors]}
+                  speed={chapter === i ? 0.35 : 0}
+                  maxPixelCount={250000}
+                  minPixelRatio={1}
+                />
+              </motion.div>
             ))}
           </div>
 
