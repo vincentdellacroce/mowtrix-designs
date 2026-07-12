@@ -10,6 +10,7 @@ import {
   useTransform,
 } from "motion/react";
 import { ArrowDown } from "lucide-react";
+import { MeshGradient } from "@paper-design/shaders-react";
 import { ScrambleText } from "@/components/ui/modern-animated-hero-section";
 import GlowButton from "@/components/ui/GlowButton";
 import { ONE_FORM } from "@/lib/data";
@@ -17,29 +18,27 @@ import { cn } from "@/lib/utils";
 import { RankChart, StatTiles } from "./scenes";
 import { SampleCard, SampleFormOverlay } from "./SampleForm";
 
+// Chapter 0 uses WebGL MeshGradient; chapters 1 & 2 use cheap CSS gradients
 const CHAPTERS = [
   {
     phrase: "MOWTRIX DESIGNS",
     until: 0.3,
-    // sage → off-white
-    bg: "radial-gradient(ellipse 120% 70% at 65% -15%, #cfe3c0 0%, #e2ecda 35%, #f4f6ef 70%, #fafcf8 100%)",
+    bg: null, // handled by MeshGradient below
     dark: false,
   },
   {
     phrase: "One Form, One Week, One Call",
     until: 0.66,
-    // deep forest
     bg: "linear-gradient(155deg, #020d07 0%, #091f12 45%, #0c2318 80%, #061209 100%)",
     dark: true,
   },
   {
     phrase: "Rank Higher, Grow Quicker",
     until: 1.01,
-    // electric neon
     bg: "radial-gradient(ellipse 100% 85% at 30% 55%, #3de028 0%, #12850e 40%, #0a3a1c 75%, #041509 100%)",
     dark: true,
   },
-] as const;
+];
 
 function chapterAt(v: number) {
   for (let i = 0; i < CHAPTERS.length; i++) {
@@ -76,7 +75,7 @@ export default function Hero() {
         <section className="relative overflow-hidden">
           <div
             className="px-6 pb-24 pt-44 text-center"
-            style={{ background: CHAPTERS[0].bg }}
+            style={{ background: "radial-gradient(ellipse 120% 70% at 65% -15%, #cfe3c0 0%, #e2ecda 35%, #f4f6ef 70%, #fafcf8 100%)" }}
           >
             <h1 className="font-display text-5xl font-semibold tracking-tight text-[#0a0f0d] sm:text-7xl">
               MOWTRIX DESIGNS
@@ -119,14 +118,30 @@ export default function Hero() {
       <section ref={ref} className="relative h-[400vh]">
         {/* pinned stage */}
         <div className="sticky top-0 h-screen overflow-hidden">
-          {/* CSS gradient layers — cross-fade on chapter change, no WebGL */}
+          {/* Background layers — MeshGradient for ch0, CSS for ch1/2 */}
           <div className="absolute inset-0">
-            {CHAPTERS.map((ch, i) => (
+            {/* Chapter 0: WebGL mesh gradient, capped to ~500×500 canvas so GPU work is minimal.
+                speed=0 stops the rAF entirely when not active (zero perf cost). */}
+            <motion.div
+              className="absolute inset-0"
+              animate={{ opacity: chapter === 0 ? 1 : 0 }}
+              transition={{ duration: 1.1, ease: "easeInOut" }}
+            >
+              <MeshGradient
+                className="absolute inset-0 h-full w-full"
+                colors={["#cfe3c0", "#ddebd4", "#f4f6ef", "#b8d9a8"]}
+                speed={chapter === 0 ? 0.35 : 0}
+                maxPixelCount={250000}
+                minPixelRatio={1}
+              />
+            </motion.div>
+            {/* Chapters 1 & 2: pure CSS, no GPU shader */}
+            {CHAPTERS.slice(1).map((ch, i) => (
               <motion.div
-                key={i}
+                key={i + 1}
                 className="absolute inset-0"
-                style={{ background: ch.bg }}
-                animate={{ opacity: chapter === i ? 1 : 0 }}
+                style={{ background: ch.bg ?? undefined }}
+                animate={{ opacity: chapter === i + 1 ? 1 : 0 }}
                 transition={{ duration: 1.1, ease: "easeInOut" }}
               />
             ))}
