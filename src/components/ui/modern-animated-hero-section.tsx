@@ -52,6 +52,12 @@ class TextScramble {
   frame: number
   frameRequest: number
   resolve: (value: void | PromiseLike<void>) => void
+  /** The latest target text. Tracked internally so we never read half-scrambled
+      innerText or fall back on a stale ref when scrolling quickly. */
+  currentText: string
+  /** True only while a full setText transition is animating. Idle glitches must
+      never run during this window or they freeze the title on wrong text. */
+  scrambling: boolean
 
   constructor(el: HTMLElement) {
     this.el = el
@@ -60,11 +66,14 @@ class TextScramble {
     this.frame = 0
     this.frameRequest = 0
     this.resolve = () => {}
+    this.currentText = el.innerText || ""
+    this.scrambling = false
     this.update = this.update.bind(this)
   }
 
   setText(newText: string) {
-    const oldText = this.el.innerText
+    const oldText = this.currentText
+    this.currentText = newText
     const length = Math.max(oldText.length, newText.length)
     const promise = new Promise<void>((resolve) => (this.resolve = resolve))
     this.queue = []
@@ -80,12 +89,16 @@ class TextScramble {
 
     cancelAnimationFrame(this.frameRequest)
     this.frame = 0
+    this.scrambling = true
     this.update()
     return promise
   }
 
-  /** Briefly glitch a random subset of chars, then restore. */
-  idleGlitch(settledText: string) {
+  /** Briefly glitch a random subset of chars, then restore. No-op if a real
+      transition is in flight, so fast scrolling can't be interrupted. */
+  idleGlitch() {
+    if (this.scrambling) return
+    const settledText = this.currentText
     const len = settledText.length
     if (len === 0) return
     const count = 1 + Math.floor(Math.random() * 2)
@@ -133,6 +146,7 @@ class TextScramble {
 
     this.el.innerHTML = output
     if (complete === this.queue.length) {
+      this.scrambling = false
       this.resolve()
     } else {
       this.frameRequest = requestAnimationFrame(this.update)
@@ -155,32 +169,41 @@ export function ScrambleText({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const scramblerRef = useRef<TextScramble | null>(null);
-  const settledRef = useRef(text);
   const reduced = usePrefersReducedMotion();
 
-  // initial scramble on text change
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (reduced) { el.innerText = text; settledRef.current = text; return; }
+    if (reduced) {
+      el.textContent = text;
+      return;
+    }
     if (!scramblerRef.current) scramblerRef.current = new TextScramble(el);
-    scramblerRef.current.setText(text).then(() => { settledRef.current = text; });
-    return () => { if (scramblerRef.current) cancelAnimationFrame(scramblerRef.current.frameRequest); };
-  }, [text, reduced]);
+    const scrambler = scramblerRef.current;
 
-  // idle per-letter glitch every 3–8 s
-  useEffect(() => {
-    if (reduced) return;
-    let timer: ReturnType<typeof setTimeout>;
-    const schedule = () => {
-      timer = setTimeout(() => {
-        scramblerRef.current?.idleGlitch(settledRef.current);
-        schedule();
+    let cancelled = false;
+    let idleTimer: ReturnType<typeof setTimeout>;
+
+    // Only arm the idle glitch loop once the headline has fully settled, so a
+    // glitch can never fire mid-transition. Re-armed on every text change.
+    const scheduleIdle = () => {
+      idleTimer = setTimeout(() => {
+        if (cancelled) return;
+        scrambler.idleGlitch();
+        scheduleIdle();
       }, 3000 + Math.random() * 5000);
     };
-    schedule();
-    return () => clearTimeout(timer);
-  }, [reduced]);
+
+    scrambler.setText(text).then(() => {
+      if (!cancelled) scheduleIdle();
+    });
+
+    return () => {
+      cancelled = true;
+      clearTimeout(idleTimer);
+      cancelAnimationFrame(scrambler.frameRequest);
+    };
+  }, [text, reduced]);
 
   return <span ref={ref} className={className} aria-label={text} role="text" />;
 }

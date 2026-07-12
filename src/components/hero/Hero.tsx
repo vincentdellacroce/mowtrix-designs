@@ -164,7 +164,7 @@ export default function Hero() {
                 "font-display font-semibold tracking-tight",
                 docked
                   ? "text-2xl sm:text-4xl lg:text-5xl"
-                  : "whitespace-nowrap text-[9vw] sm:text-6xl lg:text-8xl"
+                  : "text-center text-[13vw] leading-[1.05] sm:whitespace-nowrap sm:text-6xl sm:leading-normal lg:text-8xl"
               )}
             >
               <ScrambleText text={CHAPTERS[chapter].phrase} />
