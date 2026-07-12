@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Search, Loader2, TrendingDown, Bot } from "lucide-react";
-import { runAudit, logAuditToSheet, type AuditResult, type Niche } from "@/lib/audit";
+import { runAudit, logAuditToSheet, validateBusinessName, type AuditResult, type Niche } from "@/lib/audit";
 import { NICHES } from "@/lib/data";
 import { Eyebrow } from "@/components/ui/atoms";
 import GlowButton from "@/components/ui/GlowButton";
@@ -12,7 +12,7 @@ import CountUp from "@/components/ui/CountUp";
 import GapVisual from "./GapVisual";
 import { cn } from "@/lib/utils";
 
-type Phase = "idle" | "scanning" | "done";
+type Phase = "idle" | "scanning" | "done" | "error";
 
 const SCAN_STEPS = [
   "Crawling Google index…",
@@ -29,6 +29,7 @@ export default function AuditTool() {
   const [result, setResult] = useState<AuditResult | null>(null);
   const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [inputError, setInputError] = useState<string | null>(null);
   const timers = useRef<number[]>([]);
 
   const clearTimers = () => {
@@ -38,7 +39,9 @@ export default function AuditTool() {
   useEffect(() => () => clearTimers(), []);
 
   const start = () => {
-    if (!business.trim()) return;
+    const err = validateBusinessName(business);
+    if (err) { setInputError(err); return; }
+    setInputError(null);
     setPhase("scanning");
     setStep(0);
     setProgress(0);
@@ -68,7 +71,7 @@ export default function AuditTool() {
   };
 
   return (
-    <div className="card-dark relative overflow-hidden rounded-3xl p-6 sm:p-10">
+    <div className="card-dark relative overflow-hidden rounded-xl p-6 sm:p-10">
       <AnimatePresence mode="wait">
         {/* ---------- IDLE ---------- */}
         {phase === "idle" && (
@@ -97,17 +100,23 @@ export default function AuditTool() {
                 >
                   Business name
                 </label>
-                <div className="flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-black-matte/60 px-4 focus-within:border-emerald-400/60 focus-within:glow-sm">
+                <div className={cn(
+                  "flex items-center gap-2 rounded-xl border bg-black-matte/60 px-4 focus-within:glow-sm",
+                  inputError ? "border-red-400/50" : "border-emerald-400/20 focus-within:border-emerald-400/60"
+                )}>
                   <Search className="h-4 w-4 text-emerald-400/70" />
                   <input
                     id="biz"
                     value={business}
-                    onChange={(e) => setBusiness(e.target.value)}
+                    onChange={(e) => { setBusiness(e.target.value); setInputError(null); }}
                     onKeyDown={(e) => e.key === "Enter" && start()}
                     placeholder="e.g. Evergreen Grounds Co."
                     className="w-full bg-transparent py-3.5 text-mist placeholder:text-haze focus:outline-none"
                   />
                 </div>
+                {inputError && (
+                  <p className="mt-1.5 text-xs text-red-400">{inputError}</p>
+                )}
               </div>
 
               <div>

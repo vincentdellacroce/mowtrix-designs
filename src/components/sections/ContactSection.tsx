@@ -63,7 +63,7 @@ export default function ContactSection() {
             href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="card-light group flex items-center justify-between rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-0.5"
+            className="card-light group flex items-center justify-between rounded-lg p-5 transition-transform duration-300 hover:-translate-y-0.5"
           >
             <span className="flex items-center gap-3">
               <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#0a0f0d] text-emerald-300">
@@ -83,7 +83,7 @@ export default function ContactSection() {
 
           <a
             href="mailto:hello@mowtrix.design"
-            className="card-light group flex items-center gap-3 rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-0.5"
+            className="card-light group flex items-center gap-3 rounded-lg p-5 transition-transform duration-300 hover:-translate-y-0.5"
           >
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#0a0f0d] text-emerald-300">
               <Mail className="h-5 w-5" />
@@ -99,7 +99,7 @@ export default function ContactSection() {
       </div>
 
       {/* right: form — dark panel floating on the light band */}
-      <div className="card-dark relative overflow-hidden rounded-3xl p-6 sm:p-8">
+      <div className="card-dark relative overflow-hidden rounded-xl p-6 sm:p-8">
         <AnimatePresence mode="wait">
           {!sent ? (
             <motion.form

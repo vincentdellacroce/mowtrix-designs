@@ -102,14 +102,31 @@ export function computeAudit(
   };
 }
 
-/** Record a run (increments visit count) and return the result. */
+/** Validate a business name — returns an error string or null if valid. */
+export function validateBusinessName(name: string): string | null {
+  const t = name.trim();
+  if (t.length < 4) return "Enter your full business name (at least 4 characters).";
+  const letters = t.replace(/[^a-zA-Z]/g, "");
+  if (letters.length < 2) return "That doesn't look like a business name.";
+  if (letters.length / t.length < 0.35) return "Business name must contain real words.";
+  // reject obvious test inputs
+  if (/^(.)\1{2,}$/i.test(letters)) return "Please enter a real business name.";
+  return null;
+}
+
+/**
+ * Record a run and return a consistent result for this business+niche combo.
+ * Score is always computed with visit=1 so results never change on re-runs.
+ * Visit count is still tracked to detect returning leads.
+ */
 export function runAudit(business: string, niche: Niche): AuditResult {
   const key = `${business.trim().toLowerCase()}::${niche}`;
   const visits = readVisits();
   const nextVisit = (visits[key] || 0) + 1;
   visits[key] = nextVisit;
   writeVisits(visits);
-  return computeAudit(business, niche, nextVisit);
+  // Always use visit=1 so the same name → same score every time
+  return computeAudit(business, niche, 1);
 }
 
 /**

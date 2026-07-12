@@ -76,7 +76,7 @@ export default function SeoAeoGeo() {
       </div>
 
       {/* right: the "show, don't tell" demo */}
-      <div className="card-dark relative min-h-[380px] overflow-hidden rounded-3xl p-6">
+      <div className="card-dark relative min-h-[380px] overflow-hidden rounded-xl p-6">
         <div className="relative mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-haze">
           <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_var(--color-emerald-glow)]" />
           live demo

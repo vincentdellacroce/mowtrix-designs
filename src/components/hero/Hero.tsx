@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   AnimatePresence,
-  animate,
   motion,
   useMotionValueEvent,
   useReducedMotion,
@@ -11,34 +10,33 @@ import {
   useTransform,
 } from "motion/react";
 import { ArrowDown } from "lucide-react";
-import { MeshGradient } from "@/components/ui/mesh-gradient";
 import { ScrambleText } from "@/components/ui/modern-animated-hero-section";
 import GlowButton from "@/components/ui/GlowButton";
 import { ONE_FORM } from "@/lib/data";
-import { cn, mixHex } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { RankChart, StatTiles } from "./scenes";
 import { SampleCard, SampleFormOverlay } from "./SampleForm";
 
-/* ⬇️ EDIT THIS to change the journey: phrase = what the title scrambles to,
-   colors = the mesh-gradient mood for that chapter, until = where the
-   chapter ends in scroll progress (0–1). */
 const CHAPTERS = [
   {
     phrase: "MOWTRIX DESIGNS",
     until: 0.3,
-    colors: ["#b3d2a6", "#dcead2", "#f4f6ef", "#fcfdfb"], // light sage → white
+    // sage → off-white
+    bg: "radial-gradient(ellipse 120% 70% at 65% -15%, #cfe3c0 0%, #e2ecda 35%, #f4f6ef 70%, #fafcf8 100%)",
     dark: false,
   },
   {
     phrase: "One Form, One Week, One Call",
     until: 0.66,
-    colors: ["#020d07", "#0d2f1f", "#14522f", "#03130a"], // deep forest
+    // deep forest
+    bg: "linear-gradient(155deg, #020d07 0%, #091f12 45%, #0c2318 80%, #061209 100%)",
     dark: true,
   },
   {
     phrase: "Rank Higher, Grow Quicker",
     until: 1.01,
-    colors: ["#3fe62e", "#9dff62", "#0b3a15", "#041a09"], // neon green
+    // electric neon
+    bg: "radial-gradient(ellipse 100% 85% at 30% 55%, #3de028 0%, #12850e 40%, #0a3a1c 75%, #041509 100%)",
     dark: true,
   },
 ] as const;
@@ -48,42 +46,6 @@ function chapterAt(v: number) {
     if (v < CHAPTERS[i].until) return i;
   }
   return CHAPTERS.length - 1;
-}
-
-/* Gradient isolated in its own component so the 60fps color tween only
-   re-renders the shader, never the whole stage. */
-function HeroGradient({ chapter, frozen }: { chapter: number; frozen: boolean }) {
-  const [colors, setColors] = useState<string[]>([...CHAPTERS[0].colors]);
-  const current = useRef<string[]>([...CHAPTERS[0].colors]);
-  const anim = useRef<ReturnType<typeof animate> | null>(null);
-
-  useEffect(() => {
-    const to = CHAPTERS[chapter].colors;
-    const from = [...current.current];
-    anim.current?.stop();
-    anim.current = animate(0, 1, {
-      duration: frozen ? 0 : 1.2,
-      ease: "easeInOut",
-      onUpdate: (t) => {
-        const mixed = from.map((f, i) => mixHex(f, to[i], t));
-        current.current = mixed;
-        setColors(mixed);
-      },
-    });
-    return () => anim.current?.stop();
-  }, [chapter, frozen]);
-
-  return (
-    <MeshGradient
-      colors={colors}
-      distortion={0.9}
-      swirl={0.65}
-      grainMixer={0.26}
-      grainOverlay={0.1}
-      speed={frozen ? 0 : 0.4}
-      style={{ width: "100%", height: "100%" }}
-    />
-  );
 }
 
 export default function Hero() {
@@ -102,54 +64,44 @@ export default function Hero() {
     setChapter((prev) => (prev === c ? prev : c));
   });
 
-  const exitFade = useTransform(scrollYProgress, [0.92, 1], [0, 1]);
+  // full-screen fade to sage-white as hero exits — blends into section-light below
+  const exitOpacity = useTransform(scrollYProgress, [0.78, 1.0], [0, 1]);
 
   const docked = chapter > 0;
   const dark = CHAPTERS[chapter].dark;
 
-  /* ---- reduced motion: no pinning, chapters stack as calm sections ---- */
   if (reduced) {
     return (
       <>
         <section className="relative overflow-hidden">
           <div
             className="px-6 pb-24 pt-44 text-center"
-            style={{ background: "linear-gradient(160deg,#cfe3c4,#f4f6ef 70%)" }}
+            style={{ background: CHAPTERS[0].bg }}
           >
             <h1 className="font-display text-5xl font-semibold tracking-tight text-[#0a0f0d] sm:text-7xl">
               MOWTRIX DESIGNS
             </h1>
             <div className="mt-10 flex flex-wrap justify-center gap-3">
-              <GlowButton variant="solid" onClick={() => setFormOpen(true)}>
-                Get a free sample
-              </GlowButton>
-              <GlowButton variant="solid" href="/work">
-                View the work
-              </GlowButton>
+              <GlowButton variant="solid" onClick={() => setFormOpen(true)}>Get a free sample</GlowButton>
+              <GlowButton variant="solid" href="/work">View the work</GlowButton>
             </div>
           </div>
-          <div className="bg-[#06120b] px-6 py-24">
+          <div style={{ background: CHAPTERS[1].bg }} className="px-6 py-24">
             <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-2">
               <div>
-                <h2 className="font-display text-3xl font-semibold text-mist">
-                  {ONE_FORM.title}
-                </h2>
+                <h2 className="font-display text-3xl font-semibold text-mist">{ONE_FORM.title}</h2>
                 <div className="mt-6 space-y-5">
                   {ONE_FORM.paragraphs.map((p) => (
-                    <p key={p.slice(0, 16)} className="leading-relaxed text-[#cfe6d8]">
-                      {p}
-                    </p>
+                    <p key={p.slice(0, 16)} className="leading-relaxed text-[#cfe6d8]">{p}</p>
                   ))}
                 </div>
               </div>
               <SampleCard onOpen={() => setFormOpen(true)} />
             </div>
           </div>
-          <div className="bg-[#0d3f1c] px-6 py-24">
+          <div style={{ background: CHAPTERS[2].bg }} className="px-6 py-24">
             <div className="mx-auto max-w-5xl">
-              <h2 className="font-display text-3xl font-semibold text-mist">
-                Rank Higher, Grow Quicker
-              </h2>
+              <h2 className="font-display text-3xl font-semibold text-mist">Rank Higher, Grow Quicker</h2>
               <div className="mt-8 grid items-center gap-8 md:grid-cols-2">
                 <RankChart />
                 <StatTiles />
@@ -166,26 +118,32 @@ export default function Hero() {
     <>
       <section ref={ref} className="relative h-[400vh]">
         {/* pinned stage */}
-        <div className="sticky top-0 h-screen overflow-hidden bg-void">
-          {/* the moving gradient — colors morph per chapter */}
+        <div className="sticky top-0 h-screen overflow-hidden">
+          {/* CSS gradient layers — cross-fade on chapter change, no WebGL */}
           <div className="absolute inset-0">
-            <HeroGradient chapter={chapter} frozen={false} />
+            {CHAPTERS.map((ch, i) => (
+              <motion.div
+                key={i}
+                className="absolute inset-0"
+                style={{ background: ch.bg }}
+                animate={{ opacity: chapter === i ? 1 : 0 }}
+                transition={{ duration: 1.1, ease: "easeInOut" }}
+              />
+            ))}
           </div>
 
-          {/* soft edge vignette on dark chapters for depth (never glitches) */}
+          {/* subtle vignette on dark chapters */}
           <motion.div
             animate={{ opacity: dark ? 1 : 0 }}
             transition={{ duration: 1 }}
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(115%_100%_at_50%_45%,transparent_55%,rgba(2,8,5,0.55))]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(115%_100%_at_50%_45%,transparent_55%,rgba(2,8,5,0.5))]"
           />
 
-          {/* title — center stage, then glitches while docking TOP-LEFT */}
+          {/* title */}
           <div
             className={cn(
               "pointer-events-none absolute inset-0 z-20 flex px-[6vw]",
-              docked
-                ? "items-start justify-start pt-[9vh]"
-                : "items-center justify-center"
+              docked ? "items-start justify-start pt-[9vh]" : "items-center justify-center"
             )}
           >
             <motion.h1
@@ -203,7 +161,7 @@ export default function Hero() {
             </motion.h1>
           </div>
 
-          {/* chapter content — smooth fade/slide, NO glitch on design */}
+          {/* chapter content */}
           <AnimatePresence mode="wait">
             <motion.div
               key={chapter}
@@ -216,12 +174,8 @@ export default function Hero() {
               {chapter === 0 && (
                 <div className="flex h-full items-center justify-center pt-[26vh]">
                   <div className="pointer-events-auto flex flex-wrap justify-center gap-3">
-                    <GlowButton variant="solid" onClick={() => setFormOpen(true)}>
-                      Get a free sample
-                    </GlowButton>
-                    <GlowButton variant="solid" href="/work">
-                      View the work
-                    </GlowButton>
+                    <GlowButton variant="solid" onClick={() => setFormOpen(true)}>Get a free sample</GlowButton>
+                    <GlowButton variant="solid" href="/work">View the work</GlowButton>
                   </div>
                 </div>
               )}
@@ -260,28 +214,25 @@ export default function Hero() {
             </motion.div>
           </AnimatePresence>
 
-          {/* scroll hint — bottom right, adapts to chapter mood */}
+          {/* scroll hint */}
           <motion.div
             animate={{
-              color: dark ? "rgba(235,255,244,0.55)" : "rgba(10,15,13,0.5)",
+              color: dark ? "rgba(235,255,244,0.5)" : "rgba(10,15,13,0.45)",
               opacity: chapter === 2 ? 0 : 1,
             }}
             transition={{ duration: 0.8 }}
             className="pointer-events-none absolute bottom-7 right-[6vw] z-10 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]"
           >
             Scroll for more
-            <motion.span
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.6, repeat: Infinity }}
-            >
+            <motion.span animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
               <ArrowDown className="h-3.5 w-3.5" />
             </motion.span>
           </motion.div>
 
-          {/* hand-off fade into the dark page below */}
+          {/* neon → sage-white exit: full screen fades to light as hero ends */}
           <motion.div
-            style={{ opacity: exitFade }}
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-void to-transparent"
+            className="pointer-events-none absolute inset-0 bg-[#f4f6ef]"
+            style={{ opacity: exitOpacity }}
           />
         </div>
       </section>

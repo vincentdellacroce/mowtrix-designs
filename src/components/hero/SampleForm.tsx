@@ -16,7 +16,7 @@ export function SampleCard({ onOpen }: { onOpen: () => void }) {
       layoutId="sample-form"
       onClick={onOpen}
       whileHover={{ y: -3 }}
-      className="w-full max-w-sm cursor-pointer rounded-3xl bg-[#f6faf3] p-8 text-left shadow-[0_30px_80px_-30px_rgba(0,0,0,0.65)] md:justify-self-end"
+      className="w-full max-w-sm cursor-pointer rounded-xl bg-[#f6faf3] p-8 text-left shadow-[0_30px_80px_-30px_rgba(0,0,0,0.65)] md:justify-self-end"
     >
       <div className="font-display text-2xl font-semibold tracking-tight text-[#0a0f0d]">
         Get your free sample
@@ -93,7 +93,7 @@ export function SampleFormOverlay({
           <motion.div
             layoutId="sample-form"
             onClick={(e) => e.stopPropagation()}
-            className="absolute inset-0 overflow-y-auto bg-[#f6faf3] sm:inset-4 sm:rounded-3xl lg:inset-8"
+            className="absolute inset-0 overflow-y-auto bg-[#f6faf3] sm:inset-4 sm:rounded-xl lg:inset-8"
           >
             <button
               onClick={onClose}

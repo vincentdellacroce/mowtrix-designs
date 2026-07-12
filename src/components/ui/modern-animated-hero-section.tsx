@@ -72,8 +72,9 @@ class TextScramble {
     for (let i = 0; i < length; i++) {
       const from = oldText[i] || ""
       const to = newText[i] || ""
-      const start = Math.floor(Math.random() * 40)
-      const end = start + Math.floor(Math.random() * 40)
+      // 2× longer scramble duration
+      const start = Math.floor(Math.random() * 80)
+      const end = start + Math.floor(Math.random() * 80)
       this.queue.push({ from, to, start, end })
     }
 
@@ -81,6 +82,33 @@ class TextScramble {
     this.frame = 0
     this.update()
     return promise
+  }
+
+  /** Briefly glitch a random subset of chars, then restore. */
+  idleGlitch(settledText: string) {
+    const len = settledText.length
+    if (len === 0) return
+    const count = 1 + Math.floor(Math.random() * 2)
+    const picks = new Set<number>()
+    while (picks.size < Math.min(count, len)) {
+      const i = Math.floor(Math.random() * len)
+      // avoid spaces
+      if (settledText[i] !== " ") picks.add(i)
+    }
+    this.queue = []
+    for (let i = 0; i < len; i++) {
+      const ch = settledText[i] || ""
+      const glitch = picks.has(i)
+      this.queue.push({
+        from: ch,
+        to: ch,
+        start: 0,
+        end: glitch ? 8 + Math.floor(Math.random() * 10) : 0,
+      })
+    }
+    cancelAnimationFrame(this.frameRequest)
+    this.frame = 0
+    this.update()
   }
 
   update() {
@@ -127,21 +155,32 @@ export function ScrambleText({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const scramblerRef = useRef<TextScramble | null>(null);
+  const settledRef = useRef(text);
   const reduced = usePrefersReducedMotion();
 
+  // initial scramble on text change
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (reduced) {
-      el.innerText = text;
-      return;
-    }
+    if (reduced) { el.innerText = text; settledRef.current = text; return; }
     if (!scramblerRef.current) scramblerRef.current = new TextScramble(el);
-    scramblerRef.current.setText(text);
-    return () => {
-      if (scramblerRef.current) cancelAnimationFrame(scramblerRef.current.frameRequest);
-    };
+    scramblerRef.current.setText(text).then(() => { settledRef.current = text; });
+    return () => { if (scramblerRef.current) cancelAnimationFrame(scramblerRef.current.frameRequest); };
   }, [text, reduced]);
+
+  // idle per-letter glitch every 3–8 s
+  useEffect(() => {
+    if (reduced) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      timer = setTimeout(() => {
+        scramblerRef.current?.idleGlitch(settledRef.current);
+        schedule();
+      }, 3000 + Math.random() * 5000);
+    };
+    schedule();
+    return () => clearTimeout(timer);
+  }, [reduced]);
 
   return <span ref={ref} className={className} aria-label={text} role="text" />;
 }

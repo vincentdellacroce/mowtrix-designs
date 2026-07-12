@@ -49,7 +49,7 @@ export default function AboutPage() {
 
       <Section size="tight">
         <Reveal>
-          <div className="relative aspect-[21/9] overflow-hidden rounded-3xl glass">
+          <div className="relative aspect-[21/9] overflow-hidden rounded-xl glass">
             <Landscape
               src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1920&q=80"
               alt="Misty green mountain landscape at sunrise"
@@ -87,7 +87,7 @@ export default function AboutPage() {
         <div className="grid gap-5 sm:grid-cols-2">
           {VALUES.map((v, i) => (
             <Reveal key={v.title} delay={i * 0.05}>
-              <div className="card-light h-full rounded-2xl p-7">
+              <div className="card-light h-full rounded-lg p-7">
                 <h3 className="font-display text-xl font-semibold text-[#0a0f0d]">
                   {v.title}
                 </h3>
