@@ -271,8 +271,18 @@ export const PROCESS: ProcessStep[] = [
 ];
 
 export const STATS = [
-  { value: "120+", label: "Sites engineered" },
-  { value: "94%", label: "Reach page one" },
-  { value: "8.4×", label: "Avg. lead growth" },
-  { value: "#1", label: "AI-search citations" },
+  { value: "85+", label: "Sites engineered" },
+  { value: "100%", label: "Reach page 2 or higher" },
+  { value: "A.I.", label: "Recognition" },
+  { value: "2.9×", label: "Average lead growth" },
 ];
+
+/** Chapter 2 of the hero journey — "One Form, One Week, One Call". */
+export const ONE_FORM = {
+  title: "One Form, One Week, One Call",
+  paragraphs: [
+    "At Mowtrix, we come from a trade background, so we know your time is valuable. That's why we've made the process as simple as possible.",
+    "Fill out one 30-second form so we can understand your business, your style, your service area, and what makes you different.",
+    "Give us one week to design your website. Then, after one quick call to review the final details, we'll publish it and get your business online.",
+  ],
+};

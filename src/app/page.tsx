@@ -3,11 +3,9 @@ import Hero from "@/components/hero/Hero";
 import Section from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/atoms";
-import StatsBand from "@/components/sections/StatsBand";
 import AuditTool from "@/components/audit/AuditTool";
 import SeoAeoGeo from "@/components/seo/SeoAeoGeo";
 import Showcase from "@/components/showcase/Showcase";
-import Process from "@/components/sections/Process";
 import ReviewMarquee from "@/components/reviews/ReviewMarquee";
 import ContactSection from "@/components/sections/ContactSection";
 import Footer from "@/components/sections/Footer";
@@ -18,15 +16,11 @@ export default function Home() {
     <>
       <Hero />
 
-      {/* proof band */}
-      <Section size="tight">
-        <StatsBand />
-      </Section>
-
       {/* the audit — the hook */}
-      <Section id="audit">
+      <Section id="audit" tone="light">
         <Reveal className="mb-12">
           <SectionHeading
+            tone="light"
             eyebrow="Reality check"
             align="center"
             title={
@@ -62,9 +56,10 @@ export default function Home() {
       </Section>
 
       {/* showcase */}
-      <Section id="work">
+      <Section id="work" tone="light">
         <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
+            tone="light"
             eyebrow="Selected work"
             title={
               <>
@@ -73,16 +68,11 @@ export default function Home() {
             }
             intro="Real builds, real results. Hover any project to feel the craft — then go see it live."
           />
-          <GlowButton href="/work" variant="outline">
+          <GlowButton href="/work" variant="solid">
             View all work
           </GlowButton>
         </Reveal>
-        <Showcase limit={4} showFilters={false} />
-      </Section>
-
-      {/* process */}
-      <Section id="process">
-        <Process />
+        <Showcase limit={2} showFilters={false} columns={1} />
       </Section>
 
       {/* reviews */}
@@ -106,7 +96,7 @@ export default function Home() {
       </Section>
 
       {/* contact */}
-      <Section id="contact">
+      <Section id="contact" tone="light">
         <ContactSection />
       </Section>
 

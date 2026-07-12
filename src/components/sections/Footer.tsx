@@ -1,12 +1,12 @@
 import Link from "next/link";
 import Wordmark from "@/components/ui/Wordmark";
-import AmbientGrid from "@/components/ui/AmbientGrid";
+import FooterVoronoi from "@/components/fx/FooterVoronoi";
 import { NAV_LINKS } from "@/components/nav/nav-config";
 
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-emerald-400/10 px-5 pt-20 sm:px-8">
-      <AmbientGrid variant="floor" />
+      <FooterVoronoi />
       <div className="relative mx-auto max-w-6xl">
         <div className="grid gap-10 pb-16 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
@@ -68,13 +68,6 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-          </div>
-        </div>
-
-        {/* giant ghost wordmark */}
-        <div className="pointer-events-none select-none overflow-hidden">
-          <div className="display-xl translate-y-[18%] bg-gradient-to-b from-emerald-500/10 to-transparent bg-clip-text text-center text-[24vw] leading-none text-transparent">
-            MOWTRIX
           </div>
         </div>
 

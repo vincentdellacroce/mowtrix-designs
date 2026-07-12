@@ -24,10 +24,10 @@ export default function WorkPage() {
         }
         intro="A cross-section of sites we've engineered. Filter by industry, hover for the results, click through to the live build."
       />
-      <Section>
+      <Section tone="light">
         <Showcase />
       </Section>
-      <Section id="contact">
+      <Section id="contact" tone="light">
         <ContactSection />
       </Section>
       <Footer />

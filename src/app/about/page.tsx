@@ -6,7 +6,7 @@ import ContactSection from "@/components/sections/ContactSection";
 import Footer from "@/components/sections/Footer";
 import Landscape from "@/components/ui/Landscape";
 import { Reveal } from "@/components/ui/Reveal";
-import { GlassCard, SectionHeading } from "@/components/ui/atoms";
+import { SectionHeading } from "@/components/ui/atoms";
 
 export const metadata: Metadata = {
   title: "About",
@@ -67,13 +67,14 @@ export default function AboutPage() {
         </Reveal>
       </Section>
 
-      <Section size="tight">
+      <Section size="tight" tone="light">
         <StatsBand />
       </Section>
 
-      <Section>
+      <Section tone="light">
         <Reveal className="mb-12">
           <SectionHeading
+            tone="light"
             eyebrow="What we believe"
             title={
               <>
@@ -86,18 +87,18 @@ export default function AboutPage() {
         <div className="grid gap-5 sm:grid-cols-2">
           {VALUES.map((v, i) => (
             <Reveal key={v.title} delay={i * 0.05}>
-              <GlassCard className="h-full p-7">
-                <h3 className="font-display text-xl font-semibold text-mist">
+              <div className="card-light h-full rounded-2xl p-7">
+                <h3 className="font-display text-xl font-semibold text-[#0a0f0d]">
                   {v.title}
                 </h3>
-                <p className="mt-3 leading-relaxed text-fog">{v.body}</p>
-              </GlassCard>
+                <p className="mt-3 leading-relaxed text-[#41504a]">{v.body}</p>
+              </div>
             </Reveal>
           ))}
         </div>
       </Section>
 
-      <Section id="contact">
+      <Section id="contact" tone="light">
         <ContactSection />
       </Section>
       <Footer />

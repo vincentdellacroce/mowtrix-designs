@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Search, Sparkles, Bot, Check } from "lucide-react";
 import { SERVICES } from "@/lib/data";
-import { GlassCard } from "@/components/ui/atoms";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -77,8 +76,7 @@ export default function SeoAeoGeo() {
       </div>
 
       {/* right: the "show, don't tell" demo */}
-      <GlassCard strong className="relative min-h-[380px] overflow-hidden p-6">
-        <div className="pointer-events-none absolute inset-0 grid-lines opacity-[0.06] [background-size:32px_32px]" />
+      <div className="card-dark relative min-h-[380px] overflow-hidden rounded-3xl p-6">
         <div className="relative mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-haze">
           <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_var(--color-emerald-glow)]" />
           live demo
@@ -88,7 +86,7 @@ export default function SeoAeoGeo() {
           {tab === "aeo" && <AeoDemo key="aeo" />}
           {tab === "geo" && <GeoDemo key="geo" />}
         </AnimatePresence>
-      </GlassCard>
+      </div>
     </div>
   );
 }

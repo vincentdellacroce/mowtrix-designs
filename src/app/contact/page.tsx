@@ -23,7 +23,7 @@ export default function ContactPage() {
         }
         intro="Whether you need a brand-new site or a ranking turnaround, we'd love to hear what you're building."
       />
-      <Section className="pt-4">
+      <Section className="pt-4" tone="light">
         <ContactSection />
       </Section>
       <Footer />

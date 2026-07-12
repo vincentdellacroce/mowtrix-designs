@@ -12,9 +12,12 @@ type Filter = (typeof FILTERS)[number];
 export default function Showcase({
   limit,
   showFilters = true,
+  columns = 2,
 }: {
   limit?: number;
   showFilters?: boolean;
+  /** 1 = fewer, larger, full-width pieces (home); 2 = gallery grid (/work) */
+  columns?: 1 | 2;
 }) {
   const [filter, setFilter] = useState<Filter>("All");
 
@@ -35,13 +38,15 @@ export default function Showcase({
                 onClick={() => setFilter(f)}
                 className={cn(
                   "relative rounded-full px-4 py-2 text-sm transition-colors duration-200",
-                  active ? "text-mist" : "text-fog hover:text-mist"
+                  active
+                    ? "text-emerald-300"
+                    : "text-[#4a5850] hover:text-[#0a0f0d]"
                 )}
               >
                 {active && (
                   <motion.span
                     layoutId="filter-pill"
-                    className="absolute inset-0 rounded-full border border-emerald-400/40 bg-emerald-500/15 glow-sm"
+                    className="absolute inset-0 rounded-full bg-[#0a0f0d]"
                     transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
@@ -52,7 +57,10 @@ export default function Showcase({
         </div>
       )}
 
-      <motion.div layout className="grid gap-6 md:grid-cols-2">
+      <motion.div
+        layout
+        className={columns === 1 ? "grid gap-12" : "grid gap-6 md:grid-cols-2"}
+      >
         <AnimatePresence mode="popLayout">
           {list.map((p) => (
             <ProjectCard key={p.slug} project={p} />

@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Wordmark from "@/components/ui/Wordmark";
 import GlowButton from "@/components/ui/GlowButton";
-import AmbientGrid from "@/components/ui/AmbientGrid";
 import { NAV_LINKS } from "./nav-config";
 
 export default function OverlayNav() {
@@ -64,11 +63,9 @@ export default function OverlayNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 grain"
+            className="fixed inset-0 z-40"
           >
             <div className="absolute inset-0 bg-void/85 backdrop-blur-2xl" />
-            <AmbientGrid />
-            <AmbientGrid variant="floor" />
             <nav className="relative z-10 flex h-full flex-col items-center justify-center gap-2">
               {NAV_LINKS.map((l, i) => (
                 <motion.div

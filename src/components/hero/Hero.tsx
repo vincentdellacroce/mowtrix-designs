@@ -1,164 +1,292 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  AnimatePresence,
+  animate,
   motion,
+  useMotionValueEvent,
+  useReducedMotion,
   useScroll,
   useTransform,
-  useReducedMotion,
 } from "motion/react";
-import Landscape from "@/components/ui/Landscape";
+import { ArrowDown } from "lucide-react";
+import { MeshGradient } from "@/components/ui/mesh-gradient";
+import { ScrambleText } from "@/components/ui/modern-animated-hero-section";
 import GlowButton from "@/components/ui/GlowButton";
-import { Eyebrow } from "@/components/ui/atoms";
-import ScrollLetter from "./ScrollLetter";
+import { ONE_FORM } from "@/lib/data";
+import { cn, mixHex } from "@/lib/utils";
+import { RankChart, StatTiles } from "./scenes";
+import { SampleCard, SampleFormOverlay } from "./SampleForm";
 
-const WORD = "MOWTRIX".split("");
+/* ⬇️ EDIT THIS to change the journey: phrase = what the title scrambles to,
+   colors = the mesh-gradient mood for that chapter, until = where the
+   chapter ends in scroll progress (0–1). */
+const CHAPTERS = [
+  {
+    phrase: "MOWTRIX DESIGNS",
+    until: 0.3,
+    colors: ["#b3d2a6", "#dcead2", "#f4f6ef", "#fcfdfb"], // light sage → white
+    dark: false,
+  },
+  {
+    phrase: "One Form, One Week, One Call",
+    until: 0.66,
+    colors: ["#020d07", "#0d2f1f", "#14522f", "#03130a"], // deep forest
+    dark: true,
+  },
+  {
+    phrase: "Rank Higher, Grow Quicker",
+    until: 1.01,
+    colors: ["#3fe62e", "#9dff62", "#0b3a15", "#041a09"], // neon green
+    dark: true,
+  },
+] as const;
+
+function chapterAt(v: number) {
+  for (let i = 0; i < CHAPTERS.length; i++) {
+    if (v < CHAPTERS[i].until) return i;
+  }
+  return CHAPTERS.length - 1;
+}
+
+/* Gradient isolated in its own component so the 60fps color tween only
+   re-renders the shader, never the whole stage. */
+function HeroGradient({ chapter, frozen }: { chapter: number; frozen: boolean }) {
+  const [colors, setColors] = useState<string[]>([...CHAPTERS[0].colors]);
+  const current = useRef<string[]>([...CHAPTERS[0].colors]);
+  const anim = useRef<ReturnType<typeof animate> | null>(null);
+
+  useEffect(() => {
+    const to = CHAPTERS[chapter].colors;
+    const from = [...current.current];
+    anim.current?.stop();
+    anim.current = animate(0, 1, {
+      duration: frozen ? 0 : 1.2,
+      ease: "easeInOut",
+      onUpdate: (t) => {
+        const mixed = from.map((f, i) => mixHex(f, to[i], t));
+        current.current = mixed;
+        setColors(mixed);
+      },
+    });
+    return () => anim.current?.stop();
+  }, [chapter, frozen]);
+
+  return (
+    <MeshGradient
+      colors={colors}
+      distortion={0.9}
+      swirl={0.65}
+      grainMixer={0.26}
+      grainOverlay={0.1}
+      speed={frozen ? 0 : 0.4}
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
+}
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const [chapter, setChapter] = useState(0);
+  const [formOpen, setFormOpen] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
   });
 
-  // background landscape resolves from grid
-  const bgScale = useTransform(scrollYProgress, [0, 0.6], [1.18, 1]);
-  const bgOpacity = useTransform(scrollYProgress, [0, 0.35, 0.7], [0.14, 0.42, 0.72]);
-  const bgBrightness = useTransform(
-    scrollYProgress,
-    [0, 0.8],
-    ["brightness(0.4) saturate(0.7)", "brightness(0.95) saturate(1.1)"]
-  );
-  const gridOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 0.25, 0.08]);
-  const floorY = useTransform(scrollYProgress, [0, 1], [40, -10]);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const c = chapterAt(v);
+    setChapter((prev) => (prev === c ? prev : c));
+  });
 
-  // eyebrow fades in early, scroll-hint fades out early
-  const eyebrowOpacity = useTransform(scrollYProgress, [0, 0.08, 0.85, 1], [0.45, 1, 1, 0]);
-  const hintOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  const exitFade = useTransform(scrollYProgress, [0.92, 1], [0, 1]);
 
-  // value-prop block appears after the wordmark assembles
-  const propOpacity = useTransform(scrollYProgress, [0.55, 0.8], [0, 1]);
-  const propY = useTransform(scrollYProgress, [0.55, 0.85], [40, 0]);
+  const docked = chapter > 0;
+  const dark = CHAPTERS[chapter].dark;
 
-  // ---- reduced-motion: static, no scroll choreography ----
+  /* ---- reduced motion: no pinning, chapters stack as calm sections ---- */
   if (reduced) {
     return (
-      <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-28 text-center">
-        <Landscape
-          src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=80"
-          alt="Sunlit green valley landscape"
-          className="absolute inset-0 opacity-50"
-          priority
-        />
-        <div className="absolute inset-0 bg-void/70" />
-        <div className="relative z-10">
-          <Eyebrow>SEO · AEO · GEO</Eyebrow>
-          <h1 className="display-xl mt-6 text-6xl sm:text-8xl">
-            MOW<span className="text-emerald-300">TRIX</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-fog">
-            The growth engine for modern trades — engineered to rank on Google
-            and the AI everyone now asks.
-          </p>
-          <div className="mt-8 flex justify-center gap-3">
-            <GlowButton href="#audit">Run your free audit</GlowButton>
-            <GlowButton href="/work" variant="outline">
-              See the work
-            </GlowButton>
+      <>
+        <section className="relative overflow-hidden">
+          <div
+            className="px-6 pb-24 pt-44 text-center"
+            style={{ background: "linear-gradient(160deg,#cfe3c4,#f4f6ef 70%)" }}
+          >
+            <h1 className="font-display text-5xl font-semibold tracking-tight text-[#0a0f0d] sm:text-7xl">
+              MOWTRIX DESIGNS
+            </h1>
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
+              <GlowButton variant="solid" onClick={() => setFormOpen(true)}>
+                Get a free sample
+              </GlowButton>
+              <GlowButton variant="solid" href="/work">
+                View the work
+              </GlowButton>
+            </div>
           </div>
-        </div>
-      </section>
+          <div className="bg-[#06120b] px-6 py-24">
+            <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-2">
+              <div>
+                <h2 className="font-display text-3xl font-semibold text-mist">
+                  {ONE_FORM.title}
+                </h2>
+                <div className="mt-6 space-y-5">
+                  {ONE_FORM.paragraphs.map((p) => (
+                    <p key={p.slice(0, 16)} className="leading-relaxed text-[#cfe6d8]">
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <SampleCard onOpen={() => setFormOpen(true)} />
+            </div>
+          </div>
+          <div className="bg-[#0d3f1c] px-6 py-24">
+            <div className="mx-auto max-w-5xl">
+              <h2 className="font-display text-3xl font-semibold text-mist">
+                Rank Higher, Grow Quicker
+              </h2>
+              <div className="mt-8 grid items-center gap-8 md:grid-cols-2">
+                <RankChart />
+                <StatTiles />
+              </div>
+            </div>
+          </div>
+        </section>
+        <SampleFormOverlay open={formOpen} onClose={() => setFormOpen(false)} />
+      </>
     );
   }
 
   return (
-    <section ref={ref} className="relative h-[300vh]">
-      {/* sticky stage — the scroll "hijack" */}
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden grain">
-        {/* background landscape, masked by grid early on */}
-        <motion.div
-          style={{ scale: bgScale, opacity: bgOpacity, filter: bgBrightness }}
-          className="absolute inset-0"
-        >
-          <Landscape
-            src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=80"
-            alt="Sunlit green valley landscape"
-            className="absolute inset-0"
-            priority
-            sizes="100vw"
-          />
-        </motion.div>
-
-        {/* vignette */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,transparent,rgba(5,8,7,0.85))]" />
-
-        {/* receding perspective grid floor */}
-        <motion.div
-          style={{ opacity: gridOpacity, y: floorY }}
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] [mask-image:linear-gradient(to_top,black,transparent)]"
-        >
-          <div className="absolute inset-x-[-50%] bottom-0 h-[130%] grid-floor animate-grid-drift" />
-        </motion.div>
-
-        {/* content */}
-        <div className="relative z-10 flex flex-col items-center px-6 text-center">
-          <motion.div style={{ opacity: eyebrowOpacity }}>
-            <Eyebrow>SEO · AEO · GEO · for modern trades</Eyebrow>
-          </motion.div>
-
-          {/* scroll-driven wordmark */}
-          <h1
-            aria-label="MOWTRIX"
-            className="display-xl mt-7 flex text-[19vw] leading-none sm:text-[15vw] lg:text-[13rem]"
-          >
-            {WORD.map((c, i) => (
-              <ScrollLetter
-                key={i}
-                progress={scrollYProgress}
-                index={i}
-                total={WORD.length}
-                char={c}
-              />
-            ))}
-          </h1>
-
-          {/* value prop appears after assembly */}
-          <motion.div
-            style={{ opacity: propOpacity, y: propY }}
-            className="mt-8 flex max-w-xl flex-col items-center"
-          >
-            <p className="text-balance text-lg text-fog sm:text-xl">
-              The growth engine for modern trades — engineered to rank on
-              Google, and on the AI everyone now asks.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <GlowButton href="#audit">Run your free audit</GlowButton>
-              <GlowButton href="/work" variant="outline">
-                See the work
-              </GlowButton>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* scroll hint */}
-        <motion.div
-          style={{ opacity: hintOpacity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <div className="flex flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-haze">
-            Scroll to enter
-            <span className="flex h-9 w-5 justify-center rounded-full border border-emerald-400/40 pt-1.5">
-              <motion.span
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 1.6, repeat: Infinity }}
-                className="h-1.5 w-1 rounded-full bg-emerald-400"
-              />
-            </span>
+    <>
+      <section ref={ref} className="relative h-[400vh]">
+        {/* pinned stage */}
+        <div className="sticky top-0 h-screen overflow-hidden bg-void">
+          {/* the moving gradient — colors morph per chapter */}
+          <div className="absolute inset-0">
+            <HeroGradient chapter={chapter} frozen={false} />
           </div>
-        </motion.div>
-      </div>
-    </section>
+
+          {/* soft edge vignette on dark chapters for depth (never glitches) */}
+          <motion.div
+            animate={{ opacity: dark ? 1 : 0 }}
+            transition={{ duration: 1 }}
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(115%_100%_at_50%_45%,transparent_55%,rgba(2,8,5,0.55))]"
+          />
+
+          {/* title — center stage, then glitches while docking TOP-LEFT */}
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-0 z-20 flex px-[6vw]",
+              docked
+                ? "items-start justify-start pt-[9vh]"
+                : "items-center justify-center"
+            )}
+          >
+            <motion.h1
+              layout
+              transition={{ layout: { type: "spring", stiffness: 110, damping: 22 } }}
+              animate={{ color: dark ? "#f2fbf5" : "#0a0f0d" }}
+              className={cn(
+                "font-display font-semibold tracking-tight",
+                docked
+                  ? "text-2xl sm:text-4xl lg:text-5xl"
+                  : "whitespace-nowrap text-[9vw] sm:text-6xl lg:text-8xl"
+              )}
+            >
+              <ScrambleText text={CHAPTERS[chapter].phrase} />
+            </motion.h1>
+          </div>
+
+          {/* chapter content — smooth fade/slide, NO glitch on design */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={chapter}
+              initial={{ opacity: 0, y: 26 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -18 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-x-[6vw] bottom-[6vh] top-[20vh] z-10"
+            >
+              {chapter === 0 && (
+                <div className="flex h-full items-center justify-center pt-[26vh]">
+                  <div className="pointer-events-auto flex flex-wrap justify-center gap-3">
+                    <GlowButton variant="solid" onClick={() => setFormOpen(true)}>
+                      Get a free sample
+                    </GlowButton>
+                    <GlowButton variant="solid" href="/work">
+                      View the work
+                    </GlowButton>
+                  </div>
+                </div>
+              )}
+
+              {chapter === 1 && (
+                <div className="flex h-full items-center">
+                  <div className="grid w-full items-center gap-8 md:grid-cols-[1.15fr_0.85fr] md:gap-14">
+                    <div className="max-w-xl space-y-5 sm:space-y-7">
+                      {ONE_FORM.paragraphs.map((p, i) => (
+                        <motion.p
+                          key={p.slice(0, 16)}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.15 + i * 0.12 }}
+                          className="text-sm leading-relaxed text-[#d3ecdd] sm:text-base"
+                        >
+                          {p}
+                        </motion.p>
+                      ))}
+                    </div>
+                    <div className="pointer-events-auto flex md:justify-end">
+                      <SampleCard onOpen={() => setFormOpen(true)} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {chapter === 2 && (
+                <div className="flex h-full items-center">
+                  <div className="grid w-full items-center gap-6 md:grid-cols-[1.1fr_0.9fr] md:gap-12">
+                    <RankChart />
+                    <StatTiles />
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* scroll hint — bottom right, adapts to chapter mood */}
+          <motion.div
+            animate={{
+              color: dark ? "rgba(235,255,244,0.55)" : "rgba(10,15,13,0.5)",
+              opacity: chapter === 2 ? 0 : 1,
+            }}
+            transition={{ duration: 0.8 }}
+            className="pointer-events-none absolute bottom-7 right-[6vw] z-10 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]"
+          >
+            Scroll for more
+            <motion.span
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity }}
+            >
+              <ArrowDown className="h-3.5 w-3.5" />
+            </motion.span>
+          </motion.div>
+
+          {/* hand-off fade into the dark page below */}
+          <motion.div
+            style={{ opacity: exitFade }}
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-void to-transparent"
+          />
+        </div>
+      </section>
+
+      <SampleFormOverlay open={formOpen} onClose={() => setFormOpen(false)} />
+    </>
   );
 }

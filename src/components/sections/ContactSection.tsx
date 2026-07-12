@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Calendar, Check, Mail, ArrowRight } from "lucide-react";
 import { NICHES } from "@/lib/data";
-import { GlassCard, Eyebrow } from "@/components/ui/atoms";
+import { Eyebrow } from "@/components/ui/atoms";
 import GlowButton from "@/components/ui/GlowButton";
 import { cn } from "@/lib/utils";
 
@@ -48,12 +48,12 @@ export default function ContactSection() {
     <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
       {/* left */}
       <div>
-        <Eyebrow>Start the climb</Eyebrow>
-        <h2 className="display-xl mt-5 text-4xl text-mist sm:text-5xl">
+        <Eyebrow tone="light">Start the climb</Eyebrow>
+        <h2 className="display-xl mt-5 text-4xl text-[#0a0f0d] sm:text-5xl">
           Let&apos;s get you to{" "}
           <span className="text-glow-emerald">#1</span>.
         </h2>
-        <p className="mt-5 max-w-md text-lg text-fog">
+        <p className="mt-5 max-w-md text-lg text-[#41504a]">
           Tell us about your business, or skip the form and grab a time
           directly. We reply to every message within one business day.
         </p>
@@ -63,44 +63,43 @@ export default function ContactSection() {
             href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center justify-between rounded-2xl glass p-5 transition-all duration-300 hover:border-emerald-400/40 hover:glow-sm"
+            className="card-light group flex items-center justify-between rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-0.5"
           >
             <span className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#0a0f0d] text-emerald-300">
                 <Calendar className="h-5 w-5" />
               </span>
               <span>
-                <span className="block font-medium text-mist">
+                <span className="block font-medium text-[#0a0f0d]">
                   Book a strategy call
                 </span>
-                <span className="block text-sm text-fog">
+                <span className="block text-sm text-[#5a6b61]">
                   20 min · free · no pressure
                 </span>
               </span>
             </span>
-            <ArrowRight className="h-5 w-5 text-emerald-300 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="h-5 w-5 text-[#157a43] transition-transform group-hover:translate-x-1" />
           </a>
 
           <a
             href="mailto:hello@mowtrix.design"
-            className="group flex items-center gap-3 rounded-2xl glass p-5 transition-all duration-300 hover:border-emerald-400/40"
+            className="card-light group flex items-center gap-3 rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-0.5"
           >
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#0a0f0d] text-emerald-300">
               <Mail className="h-5 w-5" />
             </span>
             <span>
-              <span className="block font-medium text-mist">
+              <span className="block font-medium text-[#0a0f0d]">
                 hello@mowtrix.design
               </span>
-              <span className="block text-sm text-fog">Prefer email? Say hi.</span>
+              <span className="block text-sm text-[#5a6b61]">Prefer email? Say hi.</span>
             </span>
           </a>
         </div>
       </div>
 
-      {/* right: form */}
-      <GlassCard strong className="relative overflow-hidden p-6 sm:p-8">
-        <div className="pointer-events-none absolute inset-0 grid-lines opacity-[0.05] [background-size:40px_40px]" />
+      {/* right: form — dark panel floating on the light band */}
+      <div className="card-dark relative overflow-hidden rounded-3xl p-6 sm:p-8">
         <AnimatePresence mode="wait">
           {!sent ? (
             <motion.form
@@ -204,7 +203,7 @@ export default function ContactSection() {
             </motion.div>
           )}
         </AnimatePresence>
-      </GlassCard>
+      </div>
     </div>
   );
 }

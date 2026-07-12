@@ -32,3 +32,15 @@ export function seededRandom(seed: number) {
 export function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
 }
+
+/** Linear mix of two #rrggbb colors, t in [0,1]. */
+export function mixHex(a: string, b: string, t: number): string {
+  const pa = parseInt(a.slice(1), 16);
+  const pb = parseInt(b.slice(1), 16);
+  const ar = (pa >> 16) & 255, ag = (pa >> 8) & 255, ab = pa & 255;
+  const br = (pb >> 16) & 255, bg = (pb >> 8) & 255, bb = pb & 255;
+  const r = Math.round(ar + (br - ar) * t);
+  const g = Math.round(ag + (bg - ag) * t);
+  const bl = Math.round(ab + (bb - ab) * t);
+  return `#${((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1)}`;
+}

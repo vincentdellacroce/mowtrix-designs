@@ -53,11 +53,12 @@ body {
   color: var(--color-mist);
   font-family: var(--font-sans);
   overflow-x: hidden;
-  /* layered ambient: forest vignette + faint emerald aurora */
-  background-image:
-    radial-gradient(1200px 700px at 50% -10%, color-mix(in oklab, var(--color-forest-deep) 70%, transparent), transparent 60%),
-    radial-gradient(900px 500px at 85% 10%, color-mix(in oklab, var(--color-emerald-600) 12%, transparent), transparent 55%),
-    radial-gradient(700px 500px at 10% 90%, color-mix(in oklab, var(--color-forest) 35%, transparent), transparent 60%);
+  /* minimal: a single, barely-there forest wash up top */
+  background-image: radial-gradient(
+    1100px 620px at 50% -25%,
+    color-mix(in oklab, var(--color-forest-deep) 38%, transparent),
+    transparent 70%
+  );
   background-attachment: fixed;
 }
 
@@ -91,12 +92,28 @@ body {
   line-height: 0.96;
 }
 
-/* gradient emerald text */
+/* emerald accent text — solid, no gradient/glow (Apple-minimal) */
 .text-glow-emerald {
-  background: linear-gradient(180deg, var(--color-mist), var(--color-emerald-200) 60%, var(--color-emerald-400));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-emerald-300);
+}
+
+/* ---------- Section tones (gradient-journey theme) ---------- */
+.section-light {
+  background:
+    radial-gradient(900px 480px at 88% -5%, rgba(255, 255, 255, 0.75), transparent 60%),
+    linear-gradient(165deg, #d9e8cf, #f5f7f1 55%, #ecf1e6);
+  color: #0a0f0d;
+}
+/* the emerald accent reads darker on light bands */
+.section-light .text-glow-emerald { color: #157a43; }
+
+.card-light {
+  background: #f7faf4;
+  box-shadow: 0 24px 60px -28px rgba(10, 15, 13, 0.35);
+}
+.card-dark {
+  background: #0a0f0d;
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.55);
 }
 
 /* ---------- Glass ---------- */
@@ -104,10 +121,8 @@ body {
   background: color-mix(in oklab, var(--color-black-matte) 55%, transparent);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid color-mix(in oklab, var(--color-emerald-300) 12%, transparent);
-  box-shadow:
-    inset 0 1px 0 0 color-mix(in oklab, var(--color-emerald-200) 8%, transparent),
-    0 20px 60px -30px rgba(0, 0, 0, 0.9);
+  border: 1px solid color-mix(in oklab, var(--color-mist) 8%, transparent);
+  box-shadow: 0 12px 40px -30px rgba(0, 0, 0, 0.8);
 }
 
 .glass-strong {
@@ -118,13 +133,57 @@ body {
 }
 
 /* ---------- Emerald glow ---------- */
-.glow-sm { box-shadow: 0 0 20px -4px color-mix(in oklab, var(--color-emerald-glow) 45%, transparent); }
-.glow-md {
-  box-shadow:
-    0 0 30px -6px color-mix(in oklab, var(--color-emerald-glow) 55%, transparent),
-    0 0 80px -30px color-mix(in oklab, var(--color-emerald-500) 60%, transparent);
+.glow-sm { box-shadow: 0 0 14px -6px color-mix(in oklab, var(--color-emerald-glow) 28%, transparent); }
+.glow-md { box-shadow: 0 0 22px -8px color-mix(in oklab, var(--color-emerald-glow) 34%, transparent); }
+.text-shadow-glow { text-shadow: 0 0 18px color-mix(in oklab, var(--color-emerald-glow) 26%, transparent); }
+
+/* scramble transition glyphs (RainingLetters hero) */
+.dud {
+  color: var(--color-emerald-glow);
+  opacity: 0.75;
 }
-.text-shadow-glow { text-shadow: 0 0 24px color-mix(in oklab, var(--color-emerald-glow) 45%, transparent); }
+
+/* hard-cut glitch entrance for hero scenes — clip/transform/filter only */
+@keyframes glitch-in {
+  0% {
+    clip-path: inset(42% 0 44% 0);
+    transform: translateX(-14px);
+    filter: drop-shadow(3px 0 0 color-mix(in oklab, var(--color-emerald-glow) 60%, transparent));
+    opacity: 0;
+  }
+  18% {
+    clip-path: inset(8% 0 62% 0);
+    transform: translateX(9px);
+    opacity: 1;
+  }
+  34% {
+    clip-path: inset(58% 0 12% 0);
+    transform: translateX(-7px);
+    filter: drop-shadow(-3px 0 0 color-mix(in oklab, var(--color-mist) 40%, transparent));
+  }
+  50% {
+    clip-path: inset(4% 0 72% 0);
+    transform: translateX(6px);
+  }
+  66% {
+    clip-path: inset(66% 0 4% 0);
+    transform: translateX(-4px);
+    filter: drop-shadow(2px 0 0 color-mix(in oklab, var(--color-emerald-glow) 50%, transparent));
+  }
+  82% {
+    clip-path: inset(12% 0 22% 0);
+    transform: translateX(2px);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translateX(0);
+    filter: none;
+    opacity: 1;
+  }
+}
+.glitch-in {
+  animation: glitch-in 0.5s steps(1, end) both;
+}
 
 /* ---------- The Matrix grid (ambient signature) ---------- */
 .grid-lines {
@@ -142,8 +201,8 @@ body {
 /* perspective floor grid */
 .grid-floor {
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--color-emerald-400) 22%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--color-emerald-400) 22%, transparent) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklab, var(--color-emerald-400) 13%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-emerald-400) 13%, transparent) 1px, transparent 1px);
   background-size: 60px 60px;
   transform: perspective(420px) rotateX(62deg);
   transform-origin: center bottom;
@@ -185,7 +244,7 @@ body {
 .animate-grid-drift { animation: grid-drift 8s linear infinite; }
 .animate-glow-breathe { animation: glow-breathe 4s ease-in-out infinite; }
 .animate-float { animation: float-y 6s ease-in-out infinite; }
-.animate-marquee { animation: marquee-x 40s linear infinite; }
+.animate-marquee { animation: marquee-x 65s linear infinite; }
 .animate-spin-slow { animation: spin-slow 22s linear infinite; }
 
 .shimmer {

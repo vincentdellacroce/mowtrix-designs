@@ -5,8 +5,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Search, Loader2, TrendingDown, Bot } from "lucide-react";
 import { runAudit, logAuditToSheet, type AuditResult, type Niche } from "@/lib/audit";
 import { NICHES } from "@/lib/data";
-import { GlassCard, Eyebrow } from "@/components/ui/atoms";
+import { Eyebrow } from "@/components/ui/atoms";
 import GlowButton from "@/components/ui/GlowButton";
+import ScanNeuro from "@/components/fx/ScanNeuro";
 import CountUp from "@/components/ui/CountUp";
 import GapVisual from "./GapVisual";
 import { cn } from "@/lib/utils";
@@ -67,10 +68,7 @@ export default function AuditTool() {
   };
 
   return (
-    <GlassCard strong className="relative overflow-hidden p-6 sm:p-10">
-      {/* faint grid base */}
-      <div className="pointer-events-none absolute inset-0 grid-lines opacity-[0.06] [background-size:40px_40px]" />
-
+    <div className="card-dark relative overflow-hidden rounded-3xl p-6 sm:p-10">
       <AnimatePresence mode="wait">
         {/* ---------- IDLE ---------- */}
         {phase === "idle" && (
@@ -153,6 +151,11 @@ export default function AuditTool() {
             exit={{ opacity: 0 }}
             className="relative flex min-h-[360px] flex-col items-center justify-center text-center"
           >
+            {/* neural field — only exists during the scan */}
+            <div className="pointer-events-none absolute inset-0 opacity-35 [mask-image:radial-gradient(90%_90%_at_50%_50%,black,transparent)]">
+              <ScanNeuro />
+            </div>
+
             {/* scan line */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
               <div
@@ -170,20 +173,20 @@ export default function AuditTool() {
               <div className="absolute inset-0 animate-glow-breathe rounded-full bg-emerald-400/20 blur-xl" />
             </div>
 
-            <p className="mt-8 font-mono text-sm text-emerald-200">
+            <p className="relative mt-8 font-mono text-sm text-emerald-200">
               {SCAN_STEPS[step]}
             </p>
-            <p className="mt-2 font-display text-lg text-mist">
+            <p className="relative mt-2 font-display text-lg text-mist">
               Analyzing {business}
             </p>
 
-            <div className="mt-6 h-1 w-full max-w-sm overflow-hidden rounded-full bg-emerald-500/10">
+            <div className="relative mt-6 h-1 w-full max-w-sm overflow-hidden rounded-full bg-emerald-500/10">
               <motion.div
                 className="h-full rounded-full bg-emerald-400 glow-sm"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="mt-3 font-mono text-[11px] tabular-nums text-haze">
+            <p className="relative mt-3 font-mono text-[11px] tabular-nums text-haze">
               {Math.round(progress)}%
             </p>
           </motion.div>
@@ -270,7 +273,7 @@ export default function AuditTool() {
           </motion.div>
         )}
       </AnimatePresence>
-    </GlassCard>
+    </div>
   );
 }
 

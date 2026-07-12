@@ -1,21 +1,31 @@
 import { cn } from "@/lib/utils";
 
-/** Small mono eyebrow label with a leading grid tick. */
+type Tone = "dark" | "light";
+
+/** Small mono eyebrow label with a leading tick. Tone-aware. */
 export function Eyebrow({
   children,
   className,
+  tone = "dark",
 }: {
   children: React.ReactNode;
   className?: string;
+  tone?: Tone;
 }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.28em] text-emerald-300/80",
+        "inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.28em]",
+        tone === "light" ? "text-[#2f6e4b]" : "text-emerald-300/80",
         className
       )}
     >
-      <span className="inline-block h-1.5 w-1.5 rounded-[2px] bg-emerald-400 shadow-[0_0_8px_var(--color-emerald-glow)]" />
+      <span
+        className={cn(
+          "inline-block h-1 w-1 rounded-full",
+          tone === "light" ? "bg-[#157a43]" : "bg-emerald-400/80"
+        )}
+      />
       {children}
     </span>
   );
@@ -49,12 +59,14 @@ export function SectionHeading({
   intro,
   align = "left",
   className,
+  tone = "dark",
 }: {
   eyebrow?: string;
   title: React.ReactNode;
   intro?: React.ReactNode;
   align?: "left" | "center";
   className?: string;
+  tone?: Tone;
 }) {
   return (
     <div
@@ -64,12 +76,22 @@ export function SectionHeading({
         className
       )}
     >
-      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="display-xl mt-5 text-4xl text-balance text-mist sm:text-5xl">
+      {eyebrow && <Eyebrow tone={tone}>{eyebrow}</Eyebrow>}
+      <h2
+        className={cn(
+          "display-xl mt-5 text-4xl text-balance sm:text-5xl",
+          tone === "light" ? "text-[#0a0f0d]" : "text-mist"
+        )}
+      >
         {title}
       </h2>
       {intro && (
-        <p className="mt-5 text-lg leading-relaxed text-fog text-pretty">
+        <p
+          className={cn(
+            "mt-5 text-lg leading-relaxed text-pretty",
+            tone === "light" ? "text-[#41504a]" : "text-fog"
+          )}
+        >
           {intro}
         </p>
       )}

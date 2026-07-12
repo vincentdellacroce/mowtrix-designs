@@ -33,13 +33,14 @@ export default function ServicesPage() {
         <SeoAeoGeo />
       </Section>
 
-      <Section id="process">
+      <Section id="process" tone="light">
         <Process />
       </Section>
 
-      <Section>
+      <Section tone="light">
         <Reveal className="mb-12">
           <SectionHeading
+            tone="light"
             align="center"
             eyebrow="See for yourself"
             title={
@@ -56,7 +57,7 @@ export default function ServicesPage() {
         </Reveal>
       </Section>
 
-      <Section id="contact">
+      <Section id="contact" tone="light">
         <ContactSection />
       </Section>
       <Footer />
