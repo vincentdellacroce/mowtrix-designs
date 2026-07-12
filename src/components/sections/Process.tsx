@@ -25,7 +25,7 @@ export default function Process() {
       <RevealGroup className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
         {PROCESS.map((step) => (
           <RevealItem key={step.n}>
-            <div className="card-light group relative h-full overflow-hidden rounded-lg p-6 transition-shadow duration-300">
+            <div className="card-light group relative h-full overflow-hidden p-6 transition-shadow duration-300">
               <div className="pointer-events-none absolute -right-6 -top-8 font-display text-8xl font-bold text-[#157a43]/10 transition-colors duration-300 group-hover:text-[#157a43]/20">
                 {step.n}
               </div>

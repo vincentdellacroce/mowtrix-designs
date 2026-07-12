@@ -19,7 +19,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="group block"
     >
-      <div className="card-light relative overflow-hidden rounded-xl transition-transform duration-500 group-hover:-translate-y-1">
+      <div className="card-light relative overflow-hidden transition-transform duration-500 group-hover:-translate-y-1">
         {/* browser chrome */}
         <div className="flex items-center gap-2 border-b border-black/5 bg-[#edf2e8] px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-black/15" />

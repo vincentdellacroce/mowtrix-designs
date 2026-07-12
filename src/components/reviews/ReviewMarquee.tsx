@@ -5,7 +5,7 @@ import { REVIEWS, type Review } from "@/lib/data";
 
 function Card({ review }: { review: Review }) {
   return (
-    <div className="card-light rounded-xl p-6">
+    <div className="card-light p-6">
       <div className="flex gap-0.5">
         {Array.from({ length: review.rating }).map((_, i) => (
           <Star key={i} className="h-4 w-4 fill-[#157a43] text-[#157a43]" />

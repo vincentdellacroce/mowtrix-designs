@@ -71,7 +71,7 @@ export default function AuditTool() {
   };
 
   return (
-    <div className="card-dark relative overflow-hidden rounded-xl p-6 sm:p-10">
+    <div className="card-dark relative overflow-hidden p-6 sm:p-10">
       <AnimatePresence mode="wait">
         {/* ---------- IDLE ---------- */}
         {phase === "idle" && (
@@ -101,7 +101,7 @@ export default function AuditTool() {
                   Business name
                 </label>
                 <div className={cn(
-                  "flex items-center gap-2 rounded-xl border bg-black-matte/60 px-4 focus-within:glow-sm",
+                  "flex items-center gap-2 border bg-black-matte/60 px-4 focus-within:glow-sm",
                   inputError ? "border-red-400/50" : "border-emerald-400/20 focus-within:border-emerald-400/60"
                 )}>
                   <Search className="h-4 w-4 text-emerald-400/70" />
@@ -258,7 +258,7 @@ export default function AuditTool() {
               </div>
 
               {/* gap visual */}
-              <div className="rounded-2xl border border-emerald-400/10 bg-black-matte/40 p-5">
+              <div className="border border-emerald-400/10 bg-black-matte/40 p-5">
                 <GapVisual
                   competitorsAhead={result.competitorsAhead}
                   seedKey={`${result.business}-${result.visit}`}
@@ -296,7 +296,7 @@ function Metric({
   value: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-emerald-400/10 bg-white/[0.02] px-4 py-3">
+    <div className="flex items-center justify-between border border-emerald-400/10 bg-white/[0.02] px-4 py-3">
       <span className="flex items-center gap-2.5 text-sm text-fog">
         <span className="text-emerald-400">{icon}</span>
         {label}

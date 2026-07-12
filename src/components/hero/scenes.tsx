@@ -28,7 +28,7 @@ const inflect = pts[4];
 
 export function RankChart() {
   return (
-    <div className="relative overflow-hidden rounded-xl bg-[#080f0a] p-5 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.7)] sm:p-6">
+    <div className="relative overflow-hidden bg-[#080f0a] p-5 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.7)] sm:p-6">
       {/* header */}
       <div className="mb-4 flex items-center justify-between">
         <div>
@@ -39,7 +39,7 @@ export function RankChart() {
             621<span className="ml-1 text-sm text-emerald-400">+657%</span>
           </div>
         </div>
-        <div className="flex items-center gap-1.5 rounded-sm bg-emerald-500/15 px-2 py-1">
+        <div className="flex items-center gap-1.5 bg-emerald-500/15 px-2 py-1">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-glow-breathe" />
           <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-emerald-300">live</span>
         </div>
@@ -151,7 +151,7 @@ export function StatTiles() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 + i * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="rounded-lg bg-[#f6faf3] p-5 text-center shadow-[0_18px_45px_-20px_rgba(0,0,0,0.55)] sm:p-6"
+          className="bg-[#f6faf3] p-5 text-center shadow-[0_18px_45px_-20px_rgba(0,0,0,0.55)] sm:p-6"
         >
           <div className="font-display text-2xl font-bold text-[#0a0f0d] sm:text-3xl">{s.value}</div>
           <div className="mt-1 text-xs leading-snug text-[#3c4a42] sm:text-sm">{s.label}</div>

@@ -26,7 +26,7 @@ const variants: Record<Variant, string> = {
     "text-mist border border-emerald-300/25 hover:border-emerald-300/60 bg-white/[0.02]",
   /* mockup style: solid black block, neon text, sharp corners */
   solid:
-    "rounded-md bg-[#0a0f0d] font-mono text-[13px] uppercase tracking-[0.14em] text-emerald-300 border border-black/60 hover:text-emerald-200",
+    "rounded-none bg-[#0a0f0d] font-mono text-[13px] uppercase tracking-[0.14em] text-emerald-300 border border-black/60 hover:text-emerald-200",
 };
 
 /**

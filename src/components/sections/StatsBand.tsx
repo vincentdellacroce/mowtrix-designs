@@ -10,7 +10,7 @@ export default function StatsBand() {
       {STATS.map((s) => (
         <RevealItem
           key={s.label}
-          className="card-light rounded-lg p-8 text-center"
+          className="card-light p-8 text-center"
         >
           <div className="font-display text-4xl font-bold text-glow-emerald sm:text-5xl">
             {s.value}

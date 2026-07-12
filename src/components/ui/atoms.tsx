@@ -43,7 +43,6 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        "rounded-2xl",
         strong ? "glass-strong" : "glass",
         className
       )}

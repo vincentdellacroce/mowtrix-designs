@@ -76,7 +76,7 @@ export default function SeoAeoGeo() {
       </div>
 
       {/* right: the "show, don't tell" demo */}
-      <div className="card-dark relative min-h-[380px] overflow-hidden rounded-xl p-6">
+      <div className="card-dark relative min-h-[380px] overflow-hidden p-6">
         <div className="relative mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-haze">
           <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_var(--color-emerald-glow)]" />
           live demo
@@ -113,7 +113,7 @@ function SeoDemo() {
         landscaper near me
       </div>
       {/* winner */}
-      <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-3 glow-sm">
+      <div className="border border-emerald-400/40 bg-emerald-500/10 p-3 glow-sm">
         <div className="flex items-center gap-2">
           <span className="rounded bg-emerald-400 px-1.5 py-0.5 font-mono text-[9px] font-bold text-black-matte">
             #1
@@ -131,7 +131,7 @@ function SeoDemo() {
         (n, i) => (
           <div
             key={n}
-            className="rounded-xl border border-white/5 px-3 py-2.5 opacity-50"
+            className="border border-white/5 px-3 py-2.5 opacity-50"
           >
             <span className="font-mono text-[10px] text-haze">#{i + 4}</span>{" "}
             <span className="text-sm text-fog">{n}</span>
@@ -146,7 +146,7 @@ function AeoDemo() {
   return (
     <Panel>
       <p className="text-sm text-fog">Featured snippet · &ldquo;best time to aerate a lawn?&rdquo;</p>
-      <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-4 glow-sm">
+      <div className="border border-emerald-400/40 bg-emerald-500/10 p-4 glow-sm">
         <p className="text-sm leading-relaxed text-mist">
           The best time to aerate cool-season lawns is early fall, when grass
           recovers fastest…

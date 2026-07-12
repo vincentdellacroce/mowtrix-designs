@@ -63,10 +63,10 @@ export default function ContactSection() {
             href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="card-light group flex items-center justify-between rounded-lg p-5 transition-transform duration-300 hover:-translate-y-0.5"
+            className="card-light group flex items-center justify-between p-5 transition-transform duration-300 hover:-translate-y-0.5"
           >
             <span className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#0a0f0d] text-emerald-300">
+              <span className="grid h-11 w-11 place-items-center bg-[#0a0f0d] text-emerald-300">
                 <Calendar className="h-5 w-5" />
               </span>
               <span>
@@ -83,9 +83,9 @@ export default function ContactSection() {
 
           <a
             href="mailto:hello@mowtrix.design"
-            className="card-light group flex items-center gap-3 rounded-lg p-5 transition-transform duration-300 hover:-translate-y-0.5"
+            className="card-light group flex items-center gap-3 p-5 transition-transform duration-300 hover:-translate-y-0.5"
           >
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#0a0f0d] text-emerald-300">
+            <span className="grid h-11 w-11 place-items-center bg-[#0a0f0d] text-emerald-300">
               <Mail className="h-5 w-5" />
             </span>
             <span>
@@ -99,7 +99,7 @@ export default function ContactSection() {
       </div>
 
       {/* right: form — dark panel floating on the light band */}
-      <div className="card-dark relative overflow-hidden rounded-xl p-6 sm:p-8">
+      <div className="card-dark relative overflow-hidden p-6 sm:p-8">
         <AnimatePresence mode="wait">
           {!sent ? (
             <motion.form
@@ -170,7 +170,7 @@ export default function ContactSection() {
                   onChange={(e) => update("message", e.target.value)}
                   rows={4}
                   placeholder="A new site, better rankings, more leads…"
-                  className="w-full resize-none rounded-xl border border-emerald-400/20 bg-black-matte/60 px-4 py-3 text-mist placeholder:text-haze transition-colors focus:border-emerald-400/60 focus:outline-none focus:glow-sm"
+                  className="w-full resize-none border border-emerald-400/20 bg-black-matte/60 px-4 py-3 text-mist placeholder:text-haze transition-colors focus:border-emerald-400/60 focus:outline-none focus:glow-sm"
                 />
               </div>
 
@@ -237,7 +237,7 @@ function Field({
         required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-emerald-400/20 bg-black-matte/60 px-4 py-3 text-mist placeholder:text-haze transition-colors focus:border-emerald-400/60 focus:outline-none focus:glow-sm"
+        className="w-full border border-emerald-400/20 bg-black-matte/60 px-4 py-3 text-mist placeholder:text-haze transition-colors focus:border-emerald-400/60 focus:outline-none focus:glow-sm"
       />
     </div>
   );
