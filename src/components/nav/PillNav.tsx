@@ -13,7 +13,7 @@ export default function PillNav() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 48);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -21,10 +21,10 @@ export default function PillNav() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 px-6 transition-all duration-500",
+        "fixed inset-x-0 top-0 z-50 px-6 py-3 transition-all duration-500",
         scrolled
-          ? "bg-void/80 py-3 backdrop-blur-md border-b border-white/5"
-          : "py-5 bg-transparent"
+          ? "translate-y-0 bg-void/80 opacity-100 backdrop-blur-md border-b border-white/5"
+          : "pointer-events-none -translate-y-4 bg-transparent opacity-0"
       )}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between">

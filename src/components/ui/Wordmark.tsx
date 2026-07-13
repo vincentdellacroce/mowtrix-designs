@@ -1,7 +1,33 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-/** Compact MOWTRIX wordmark with a glowing grid-glyph "M". For nav/footer. */
+/** Line-art "M" monogram — outer legs + diagonals in the current text
+    color, inner chevron in brand emerald. Matches the standalone mark
+    (no badge/container), so it works on any background. */
+function MowtrixMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} aria-hidden>
+      <path
+        d="M18 20 L18 80 M18 20 L46 54 M82 20 L82 80 M82 20 L54 54"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="7"
+        strokeLinecap="butt"
+        strokeLinejoin="miter"
+      />
+      <path
+        d="M34 46 L50 66 L66 46"
+        fill="none"
+        stroke="var(--color-emerald-400)"
+        strokeWidth="7"
+        strokeLinecap="butt"
+        strokeLinejoin="miter"
+      />
+    </svg>
+  );
+}
+
+/** Compact MOWTRIX wordmark with the line-art "M" monogram. For nav/footer. */
 export default function Wordmark({
   className,
   href = "/",
@@ -10,20 +36,8 @@ export default function Wordmark({
   href?: string | null;
 }) {
   const mark = (
-    <span className={cn("group inline-flex items-center gap-2.5", className)}>
-      <span className="relative grid h-7 w-7 place-items-center rounded-[7px] border border-emerald-400/40 bg-emerald-500/10 transition-shadow duration-300 group-hover:shadow-[0_0_18px_-2px_var(--color-emerald-glow)]">
-        <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
-          <path
-            d="M3 19V6l5.5 6L12 7l3.5 5L21 6v13"
-            fill="none"
-            stroke="var(--color-emerald-400)"
-            strokeWidth="2"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          />
-        </svg>
-        <span className="pointer-events-none absolute inset-0 rounded-[7px] grid-lines opacity-30 [background-size:6px_6px]" />
-      </span>
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
+      <MowtrixMark className="h-6 w-6 text-mist" />
       <span className="font-display text-[15px] font-semibold tracking-[0.14em] text-mist">
         MOW<span className="text-emerald-300">TRIX</span>
       </span>

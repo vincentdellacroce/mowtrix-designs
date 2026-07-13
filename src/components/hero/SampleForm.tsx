@@ -20,11 +20,11 @@ import { cn, hashString, seededRandom } from "@/lib/utils";
 import Landscape from "@/components/ui/Landscape";
 
 /* The "one form" — a white teaser card in chapter 2 that expands to fill
-   the whole page when clicked (shared layoutId). Two-part flow:
-   Part 1 (required, ~30s) is the lead — name/business/phone/email — sent
-   immediately. Part 2 (optional) collects project details so we can prep
-   before the call; skipping it just means we call to gather that info
-   ourselves. */
+   the whole page when clicked (shared layoutId). Two-part flow, no way to
+   bail between them: Part 1 (name/business/phone/email) sends the lead
+   immediately, then Part 2 (project details) follows right after. A logo
+   upload becomes required if they pick the cheapest budget tier, since
+   that tier skips the custom design pass. */
 
 export function SampleCard({ onOpen }: { onOpen: () => void }) {
   return (
@@ -121,16 +121,25 @@ function isSlotOpen(key: string, time: string) {
   return seededRandom(hashString(`${key}::${time}`))() > 0.35;
 }
 
-async function postLead(payload: Record<string, unknown>) {
+async function postLead(payload: Record<string, unknown>, file?: File | null) {
   const endpoint = process.env.NEXT_PUBLIC_CONTACT_ENDPOINT;
   if (!endpoint) return;
   try {
-    await fetch(endpoint, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    if (file) {
+      const fd = new FormData();
+      for (const [k, v] of Object.entries(payload)) {
+        if (v != null) fd.append(k, typeof v === "string" ? v : JSON.stringify(v));
+      }
+      fd.append("logo", file, file.name);
+      await fetch(endpoint, { method: "POST", mode: "no-cors", body: fd });
+    } else {
+      await fetch(endpoint, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    }
   } catch {
     /* best-effort */
   }
@@ -138,7 +147,10 @@ async function postLead(payload: Record<string, unknown>) {
 
 /* ---------- form state ---------- */
 
-type Step = "lead" | "choice" | "details" | "done";
+type Step = "lead" | "details" | "done";
+
+/** Cheapest tier skips the custom design pass, so a logo is required. */
+const LOGO_REQUIRED_TIER = "starting";
 
 interface LeadForm {
   name: string;
@@ -156,6 +168,7 @@ interface DetailsForm {
   features: string[];
   date: string;
   time: string;
+  logo: File | null;
 }
 
 const emptyLead: LeadForm = { name: "", business: "", phone: "", email: "" };
@@ -168,6 +181,7 @@ const emptyDetails: DetailsForm = {
   features: [],
   date: "",
   time: "",
+  logo: null,
 };
 
 export function SampleFormOverlay({
@@ -178,7 +192,6 @@ export function SampleFormOverlay({
   onClose: () => void;
 }) {
   const [step, setStep] = useState<Step>("lead");
-  const [detailed, setDetailed] = useState(false);
   const [lead, setLead] = useState<LeadForm>(emptyLead);
   const [details, setDetails] = useState<DetailsForm>(emptyDetails);
 
@@ -191,7 +204,6 @@ export function SampleFormOverlay({
   useEffect(() => {
     if (open) {
       setStep("lead");
-      setDetailed(false);
       setLead(emptyLead);
       setDetails(emptyDetails);
     }
@@ -212,18 +224,13 @@ export function SampleFormOverlay({
     e.preventDefault();
     postLead({ type: "lead-intake", ...lead });
     updateDetails("business", lead.business);
-    setStep("choice");
+    setStep("details");
   };
 
   const submitDetails = async (e: React.FormEvent) => {
     e.preventDefault();
-    setDetailed(true);
-    postLead({ type: "lead-details", ...lead, ...details });
-    setStep("done");
-  };
-
-  const skip = () => {
-    setDetailed(false);
+    const { logo, ...rest } = details;
+    postLead({ type: "lead-details", ...lead, ...rest }, logo);
     setStep("done");
   };
 
@@ -311,48 +318,21 @@ export function SampleFormOverlay({
                   </StepShell>
                 )}
 
-                {step === "choice" && (
-                  <StepShell key="choice">
+                {step === "details" && (
+                  <StepShell key="details" wide>
                     <span className="grid h-14 w-14 place-items-center bg-[#0a0f0d] text-emerald-300">
                       <Check className="h-7 w-7" />
                     </span>
-                    <h2 className="mt-6 font-display text-3xl font-semibold tracking-tight text-[#0a0f0d] sm:text-4xl">
-                      Got it, {lead.name.split(" ")[0] || "thanks"}.
-                    </h2>
-                    <p className="mt-3 max-w-md text-[#3c4a42]">
-                      We&apos;ll call you within one business day. Want to
-                      speed things up? Two more minutes on your project — the
-                      look, the budget, what the site needs — means we walk
-                      into that call already prepared.
-                    </p>
-                    <div className="mt-8 flex flex-wrap gap-3">
-                      <button
-                        onClick={() => setStep("details")}
-                        className="inline-flex items-center justify-center gap-2 bg-[#0a0f0d] px-6 py-3.5 font-mono text-sm uppercase tracking-[0.14em] text-emerald-300 transition-colors hover:text-emerald-200"
-                      >
-                        Add project details <ArrowRight className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={skip}
-                        className="px-6 py-3.5 font-mono text-sm uppercase tracking-[0.14em] text-[#3c4a42] transition-colors hover:text-[#0a0f0d]"
-                      >
-                        No thanks, I&apos;ll wait for the call
-                      </button>
-                    </div>
-                  </StepShell>
-                )}
-
-                {step === "details" && (
-                  <StepShell key="details" wide>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-[#4b7a5e]">
-                      A few more details
+                    <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.24em] text-[#4b7a5e]">
+                      Got it, {lead.name.split(" ")[0] || "thanks"} — one more step
                     </p>
                     <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-[#0a0f0d] sm:text-4xl">
                       Help us prep for the call.
                     </h2>
                     <p className="mt-3 text-[#3c4a42]">
-                      Everything here is optional — skip anything you&apos;re
-                      not sure about yet.
+                      A little more on your project so we walk in already
+                      prepared. Most of this is optional — fill in what you
+                      know.
                     </p>
 
                     <form onSubmit={submitDetails} className="mt-10 space-y-10">
@@ -404,6 +384,29 @@ export function SampleFormOverlay({
                           ))}
                         </div>
                       </FieldGroup>
+
+                      {details.budget === LOGO_REQUIRED_TIER && (
+                        <FieldGroup label="Upload your logo (required at this tier)">
+                          <p className="mb-3 text-xs text-[#5a6b61]">
+                            The Starting Out tier skips a custom design pass,
+                            so we build around your existing logo.
+                          </p>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            required
+                            onChange={(e) =>
+                              updateDetails("logo", e.target.files?.[0] ?? null)
+                            }
+                            className="block w-full text-sm text-[#3c4a42] file:mr-4 file:border file:border-[#0a0f0d]/20 file:bg-white file:px-4 file:py-2 file:text-sm file:font-medium file:text-[#0a0f0d] file:transition-colors hover:file:border-[#0a0f0d]/40"
+                          />
+                          {details.logo && (
+                            <p className="mt-2 text-xs text-[#5a6b61]">
+                              Selected: {details.logo.name}
+                            </p>
+                          )}
+                        </FieldGroup>
+                      )}
 
                       <FieldGroup label="Business colors (up to 3)">
                         <div className="flex flex-wrap items-center gap-3">
@@ -551,21 +554,12 @@ export function SampleFormOverlay({
                         />
                       </FieldGroup>
 
-                      <div className="flex flex-wrap gap-3">
-                        <button
-                          type="submit"
-                          className="inline-flex items-center justify-center gap-2 bg-[#0a0f0d] px-6 py-4 font-mono text-sm uppercase tracking-[0.14em] text-emerald-300 transition-colors hover:text-emerald-200"
-                        >
-                          Submit details <ArrowRight className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={skip}
-                          className="px-6 py-4 font-mono text-sm uppercase tracking-[0.14em] text-[#3c4a42] transition-colors hover:text-[#0a0f0d]"
-                        >
-                          Skip for now
-                        </button>
-                      </div>
+                      <button
+                        type="submit"
+                        className="inline-flex items-center justify-center gap-2 bg-[#0a0f0d] px-6 py-4 font-mono text-sm uppercase tracking-[0.14em] text-emerald-300 transition-colors hover:text-emerald-200"
+                      >
+                        Submit details <ArrowRight className="h-4 w-4" />
+                      </button>
                     </form>
                   </StepShell>
                 )}
@@ -578,7 +572,7 @@ export function SampleFormOverlay({
                     <h2 className="mt-6 font-display text-3xl font-semibold text-[#0a0f0d]">
                       We&apos;re on it.
                     </h2>
-                    {detailed && details.date && details.time ? (
+                    {details.date && details.time ? (
                       <p className="mx-auto mt-3 max-w-sm text-[#3c4a42]">
                         You&apos;re set for{" "}
                         <span className="font-medium text-[#0a0f0d]">
