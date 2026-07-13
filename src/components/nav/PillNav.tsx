@@ -21,10 +21,10 @@ export default function PillNav() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 px-6 py-3 transition-all duration-500",
+        "fixed inset-x-0 top-0 z-50 bg-transparent px-6 py-5 transition-all duration-500",
         scrolled
-          ? "translate-y-0 bg-void/80 opacity-100 backdrop-blur-md border-b border-white/5"
-          : "pointer-events-none -translate-y-4 bg-transparent opacity-0"
+          ? "translate-y-0 opacity-100"
+          : "pointer-events-none -translate-y-4 opacity-0"
       )}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between">

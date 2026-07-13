@@ -241,7 +241,7 @@ export default function Hero() {
               opacity: chapter === 2 ? 0 : 1,
             }}
             transition={{ duration: 0.8 }}
-            className="pointer-events-none absolute bottom-7 right-[6vw] z-10 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]"
+            className="pointer-events-none absolute inset-x-0 bottom-7 z-10 flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]"
           >
             Scroll for more
             <motion.span animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
