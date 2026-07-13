@@ -68,6 +68,10 @@ export default function Hero() {
   // full-screen fade to sage-white as hero exits — blends into section-light below
   const exitOpacity = useTransform(scrollYProgress, [0.78, 1.0], [0, 1]);
 
+  // black picture-frame border around the page — present on load, shrinks
+  // to nothing within the first bit of scroll
+  const frameSize = useTransform(scrollYProgress, [0, 0.1], ["5vmin", "0vmin"]);
+
   const docked = chapter > 0;
   const dark = CHAPTERS[chapter].dark;
 
@@ -117,6 +121,12 @@ export default function Hero() {
 
   return (
     <>
+      {/* picture-frame border — visible on load, shrinks away as you scroll */}
+      <motion.div style={{ height: frameSize }} className="pointer-events-none fixed inset-x-0 top-0 z-40 bg-[#0a0f0d]" />
+      <motion.div style={{ height: frameSize }} className="pointer-events-none fixed inset-x-0 bottom-0 z-40 bg-[#0a0f0d]" />
+      <motion.div style={{ width: frameSize }} className="pointer-events-none fixed inset-y-0 left-0 z-40 bg-[#0a0f0d]" />
+      <motion.div style={{ width: frameSize }} className="pointer-events-none fixed inset-y-0 right-0 z-40 bg-[#0a0f0d]" />
+
       <section ref={ref} className="relative h-[400vh]">
         {/* pinned stage */}
         <div className="sticky top-0 h-screen overflow-hidden">
