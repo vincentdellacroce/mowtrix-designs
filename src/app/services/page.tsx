@@ -3,7 +3,6 @@ import PageHeader from "@/components/sections/PageHeader";
 import Section from "@/components/ui/Section";
 import SeoAeoGeo from "@/components/seo/SeoAeoGeo";
 import Process from "@/components/sections/Process";
-import AuditTool from "@/components/audit/AuditTool";
 import ContactSection from "@/components/sections/ContactSection";
 import Footer from "@/components/sections/Footer";
 import { Reveal } from "@/components/ui/Reveal";
@@ -35,26 +34,6 @@ export default function ServicesPage() {
 
       <Section id="process" tone="light">
         <Process />
-      </Section>
-
-      <Section tone="light">
-        <Reveal className="mb-12">
-          <SectionHeading
-            tone="light"
-            align="center"
-            eyebrow="See for yourself"
-            title={
-              <>
-                Start with a{" "}
-                <span className="text-glow-emerald">free audit</span>.
-              </>
-            }
-            className="mx-auto"
-          />
-        </Reveal>
-        <Reveal className="mx-auto max-w-4xl">
-          <AuditTool />
-        </Reveal>
       </Section>
 
       <Section id="contact" tone="light">

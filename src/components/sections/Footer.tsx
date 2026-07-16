@@ -45,14 +45,6 @@ export default function Footer() {
             <ul className="mt-4 space-y-2.5">
               <li>
                 <Link
-                  href="/#audit"
-                  className="text-fog transition-colors hover:text-mist"
-                >
-                  Free audit
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/contact"
                   className="text-fog transition-colors hover:text-mist"
                 >

@@ -3,7 +3,6 @@ import Hero from "@/components/hero/Hero";
 import Section from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/atoms";
-import AuditTool from "@/components/audit/AuditTool";
 import SeoAeoGeo from "@/components/seo/SeoAeoGeo";
 import Showcase from "@/components/showcase/Showcase";
 import ReviewMarquee from "@/components/reviews/ReviewMarquee";
@@ -15,28 +14,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-
-      {/* the audit — the hook */}
-      <Section id="audit" tone="light">
-        <Reveal className="mb-12">
-          <SectionHeading
-            tone="light"
-            eyebrow="Reality check"
-            align="center"
-            title={
-              <>
-                Where do you{" "}
-                <span className="text-glow-emerald">actually</span> rank?
-              </>
-            }
-            intro="Most trade businesses are losing leads to competitors they've never heard of. Run the 10-second audit and see the gap for yourself."
-            className="mx-auto"
-          />
-        </Reveal>
-        <Reveal delay={0.1} className="mx-auto max-w-4xl">
-          <AuditTool />
-        </Reveal>
-      </Section>
 
       {/* SEO / AEO / GEO explainer */}
       <Section id="services">

@@ -65,9 +65,6 @@ export default function Hero() {
     setChapter((prev) => (prev === c ? prev : c));
   });
 
-  // full-screen fade to sage-white as hero exits — blends into section-light below
-  const exitOpacity = useTransform(scrollYProgress, [0.78, 1.0], [0, 1]);
-
   // black picture-frame border around the page — present on load, shrinks
   // to nothing within the first bit of scroll
   const frameSize = useTransform(scrollYProgress, [0, 0.1], ["5vmin", "0vmin"]);
@@ -234,26 +231,22 @@ export default function Hero() {
             </motion.div>
           </AnimatePresence>
 
-          {/* scroll hint */}
+          {/* scroll hint — sits above the frame border (z-40) and carries its
+              own backdrop chip so it stays legible against any chapter */}
           <motion.div
             animate={{
-              color: dark ? "rgba(235,255,244,0.5)" : "rgba(10,15,13,0.45)",
+              color: dark ? "rgba(235,255,244,0.7)" : "rgba(10,15,13,0.6)",
+              backgroundColor: dark ? "rgba(10,15,13,0.35)" : "rgba(255,255,255,0.35)",
               opacity: chapter === 2 ? 0 : 1,
             }}
             transition={{ duration: 0.8 }}
-            className="pointer-events-none absolute inset-x-0 bottom-7 z-10 flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]"
+            className="pointer-events-none absolute inset-x-0 bottom-16 z-[45] mx-auto flex w-fit items-center justify-center gap-2 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] backdrop-blur-sm"
           >
             Scroll for more
             <motion.span animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
               <ArrowDown className="h-3.5 w-3.5" />
             </motion.span>
           </motion.div>
-
-          {/* neon → sage-white exit: full screen fades to light as hero ends */}
-          <motion.div
-            className="pointer-events-none absolute inset-0 bg-[#f4f6ef]"
-            style={{ opacity: exitOpacity }}
-          />
         </div>
       </section>
 

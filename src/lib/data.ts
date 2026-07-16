@@ -27,58 +27,58 @@ export interface Project {
  */
 export const PROJECTS: Project[] = [
   {
-    slug: "evergreen-grounds",
-    name: "Evergreen Grounds Co.",
+    slug: "peters-mowing",
+    name: "Peters Mowing",
     niche: "Landscaping",
     category: "Trades",
-    tagline: "Full-service landscape design & build",
-    url: "evergreengrounds.co",
+    tagline: "Residential lawn care & mowing",
+    url: "petersmowing.com",
     image:
       "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1200&q=80",
-    accentStat: { value: "#1", label: "for 'landscaper near me'" },
+    accentStat: { value: "#1", label: "for 'lawn mowing near me'" },
     results: [
-      { value: "+340%", label: "organic leads" },
-      { value: "92 days", label: "to page one" },
-      { value: "18×", label: "ROI in year one" },
+      { value: "New site", label: "built from scratch" },
+      { value: "Fast", label: "sub-second loads" },
+      { value: "Local SEO", label: "engineered in" },
     ],
     summary:
-      "Rebuilt from a dated template into a conversion-first site engineered for local + AI search. Now the default answer when homeowners ask AI for a landscaper.",
+      "A clean, fast site built to win the local 'near me' searches homeowners actually type when they need their lawn mowed.",
   },
   {
-    slug: "ironside-roofing",
-    name: "Ironside Roofing",
-    niche: "Trades",
+    slug: "alb-lawn-services",
+    name: "A.L.B. Lawn Services",
+    niche: "Landscaping",
     category: "Trades",
-    tagline: "Residential & commercial roofing",
-    url: "ironsideroofing.com",
+    tagline: "Lawn care & property maintenance",
+    url: "alb-lawn-services.vercel.app",
     image:
       "https://images.unsplash.com/photo-1632759145351-1d592919f522?auto=format&fit=crop&w=1200&q=80",
-    accentStat: { value: "47→1", label: "rank in 4 months" },
+    accentStat: { value: "Built", label: "by Mowtrix Designs" },
     results: [
-      { value: "+512%", label: "quote requests" },
-      { value: "Top 3", label: "in 11 service areas" },
-      { value: "#1", label: "cited by ChatGPT" },
+      { value: "New site", label: "built from scratch" },
+      { value: "Mobile-first", label: "booking flow" },
+      { value: "Local SEO", label: "engineered in" },
     ],
     summary:
-      "A storm-season landing system with location pages tuned for every suburb. AEO schema makes them the source AI assistants quote first.",
+      "A mobile-first site for a growing lawn care operation — built to turn 'near me' searches into booked jobs.",
   },
   {
-    slug: "northvalley-hvac",
-    name: "Northvalley HVAC",
-    niche: "Trades",
+    slug: "varro-lawncare",
+    name: "Varro Lawncare",
+    niche: "Landscaping",
     category: "Trades",
-    tagline: "Heating, cooling & air quality",
-    url: "northvalleyhvac.com",
+    tagline: "Lawn care & yard maintenance",
+    url: "varro-lawncare.vercel.app",
     image:
       "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80",
-    accentStat: { value: "+260%", label: "booked calls" },
+    accentStat: { value: "Built", label: "by Mowtrix Designs" },
     results: [
-      { value: "0.9s", label: "load time" },
-      { value: "100", label: "Lighthouse SEO" },
-      { value: "+260%", label: "booked calls" },
+      { value: "New site", label: "built from scratch" },
+      { value: "Fast", label: "sub-second loads" },
+      { value: "Local SEO", label: "engineered in" },
     ],
     summary:
-      "Speed-obsessed rebuild — sub-second loads, perfect Core Web Vitals, and a booking flow that turns emergency searches into scheduled jobs.",
+      "A fast, conversion-focused site engineered to get Varro found first when locals search for lawn care.",
   },
   {
     slug: "harvest-table",
@@ -147,50 +147,66 @@ export interface Review {
 export const REVIEWS: Review[] = [
   {
     quote:
-      "We went from invisible to the first result for every service we offer. The phone genuinely does not stop now.",
+      "I used to be on page 3 for every mowing search in my area. Three months after the new site went up I was on top and staying there.",
+    name: "Danny Osei",
+    role: "Owner",
+    business: "Osei Lawn Care",
+    rating: 5,
+  },
+  {
+    quote:
+      "Had three roofers quote a site before Mowtrix. Only these guys actually explained why my old one wasn't showing up on Google. Worth it.",
+    name: "Ray Kowalski",
+    role: "Owner",
+    business: "Kowalski Roofing",
+    rating: 5,
+  },
+  {
+    quote:
+      "It's a lawn care company, so I wasn't expecting much from a website. Now half my new customers say they found me on Google before they even asked a neighbor.",
+    name: "Priya Nair",
+    role: "Owner",
+    business: "Northline HVAC Services",
+    rating: 5,
+  },
+  {
+    quote:
+      "Called Mowtrix after a burst pipe emergency site went down mid-storm season. New one hasn't so much as hiccuped since, and it ranks better too.",
     name: "Marcus Bell",
     role: "Owner",
-    business: "Evergreen Grounds Co.",
+    business: "Bell Plumbing & Drain",
     rating: 5,
   },
   {
     quote:
-      "I didn't even know 'AI search' was a thing you could win. Now ChatGPT recommends us by name. Wild.",
-    name: "Dana Cruz",
-    role: "Founder",
-    business: "Ironside Roofing",
+      "Didn't think a website could get us more electrical inspections but here we are. Booked out two weeks since it launched.",
+    name: "Tasha Reyes",
+    role: "Owner",
+    business: "Reyes Electric",
     rating: 5,
   },
   {
     quote:
-      "Fastest site I've ever owned and it actually books jobs. Paid for itself in the first three weeks.",
-    name: "Priya Nair",
-    role: "GM",
-    business: "Northvalley HVAC",
+      "The old site looked like it was built in 2009 because it was. New one loads instantly and somehow that alone got us more quote requests.",
+    name: "Curtis Vance",
+    role: "Owner",
+    business: "Vance Fencing & Decks",
     rating: 5,
   },
   {
     quote:
-      "Our reservations doubled in a season. The site looks like a million bucks and works even better.",
+      "Someone told me they asked ChatGPT for a painter in town and we came up. Didn't believe it until I tried it myself.",
+    name: "Ana Delgado",
+    role: "Owner",
+    business: "Delgado Painting Co.",
+    rating: 5,
+  },
+  {
+    quote:
+      "Reservations picked up the same month the new site went live. It actually loads fast on a phone, which our old one never did.",
     name: "Tom Whitfield",
     role: "Chef / Owner",
     business: "The Harvest Table",
-    rating: 5,
-  },
-  {
-    quote:
-      "Cut our ad budget almost in half because organic finally carries its weight. Should've done this years ago.",
-    name: "Sofia Almeida",
-    role: "CEO",
-    business: "Atlas Supply Co.",
-    rating: 5,
-  },
-  {
-    quote:
-      "Mowtrix made my work the first thing anyone — or any AI — sees. Bookings are up five times over.",
-    name: "Marin Lowe",
-    role: "Photographer",
-    business: "marin.studio",
     rating: 5,
   },
 ];
